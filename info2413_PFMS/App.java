@@ -1,6 +1,8 @@
 package info2413_PFMS;
 
+import java.sql.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -8,10 +10,16 @@ import javax.swing.table.DefaultTableModel;
 
 
 // Application GUI
+
+// TODO Move GUI Components to Individual Classes
 public class App {
+	
+	// Temp Vars
 	User currUser;
 	// Temp user inventories
 	LinkedList<String> temp = new LinkedList<>();
+	
+	public static ArrayList<User> users = new ArrayList<User>();
 	
 	// Setup frame
 	public JFrame frame;
@@ -268,7 +276,8 @@ public class App {
 		frame.repaint();
 	}
 
-	public static void main(String s[]) {
+	// Main
+	public static void main(String s[]) throws Exception {
 		App app = new App();
 		app.setup();
 		app.loginPage();
@@ -276,8 +285,67 @@ public class App {
 		app.homePage();
 		app.changePanel(app.loginPage);
 		
+		// Create users
+		ArrayList<String[]> userInfo = User.getUserInfo();
+		
+		// Create all users
+		for (int i = 0; i < userInfo.size(); i++) {
+			int userId = Integer.parseInt(userInfo.get(i)[0]);
+			String username = userInfo.get(i)[1];
+			String userPwd = userInfo.get(i)[2];
+			String email = userInfo.get(i)[3];
+			float budget = Float.parseFloat(userInfo.get(i)[4]);
+			
+			users.add(new User(userId, username, userPwd, email, budget));
+		}
+
+		
 	}
 
+	
+	// TODO Add Database Connection
+	public static Connection getConnection() throws Exception {
+		try {
+			String driver = "com.mysql.cj.jdbc.Driver";
+			String url = "jdbc:mysql://localhost:3306/info2413";
+			String username = "root";
+			String password = "Gu6570$$";
+			Class.forName(driver);
+			
+			Connection conn = DriverManager.getConnection(url, username, password);
+			System.out.println("Database connected");
+			return conn;
+		} catch (Exception e ) {
+			System.out.println(e);
+		}
+		
+		return null;
+	}
+	// Close Database Connection
+	public static void closeQueitly(Connection conn) {
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (Exception e) {}
+		}
+		
+	}
+	public static void closeQueitly(ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (Exception e) {}
+		}
+		
+	}
+	public static void closeQueitly(PreparedStatement stmnt) {
+		if (stmnt != null) {
+			try {
+				stmnt.close();
+			} catch (Exception e) {}
+		}
+		
+	}
 	
 	// ---- Action Listeners ----
 	// Back to home page
@@ -297,13 +365,18 @@ public class App {
 		}
 		public void actionPerformed(ActionEvent e) {
 			// Authenticate user
-			// Temp auth
-			if (loginUserText.getText().equals("test") && loginPwdText.getText().equals("test")) {
-				changePanel(homePage);
-			} else {
-				// Send Notification
-				// Temporary
-				System.out.println("Unauthorized user");
+			boolean authenticated = false;
+			int i = 0;
+			while (i < users.size() && !authenticated) {
+				if (loginUserText.getText().equals(users.get(i).getUsername()) && loginPwdText.getText().equals(users.get(i).getPassword())) {
+					System.out.println("Authorized User");
+					changePanel(homePage);
+					authenticated = true;
+				}
+				i++;
+			}
+			if (!authenticated) {
+				System.out.println("Unauthorized User");
 			}
 		}
 	}
