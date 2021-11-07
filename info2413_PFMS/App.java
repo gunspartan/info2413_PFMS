@@ -263,7 +263,7 @@ public class App {
 	// Edit Grocery Item
 	
 	// Manage Categories
-	
+
 	// Notifications
 	
 	// Reports
@@ -275,29 +275,44 @@ public class App {
 		frame.revalidate();
 		frame.repaint();
 	}
-
+	
 	// Main
 	public static void main(String s[]) throws Exception {
-		App app = new App();
-		app.setup();
-		app.loginPage();
-		app.registerPage();
-		app.homePage();
-		app.changePanel(app.loginPage);
-		
-		// Create users
-		ArrayList<String[]> userInfo = User.getUserInfo();
-		
-		// Create all users
-		for (int i = 0; i < userInfo.size(); i++) {
-			int userId = Integer.parseInt(userInfo.get(i)[0]);
-			String username = userInfo.get(i)[1];
-			String userPwd = userInfo.get(i)[2];
-			String email = userInfo.get(i)[3];
-			float budget = Float.parseFloat(userInfo.get(i)[4]);
-			
-			users.add(new User(userId, username, userPwd, email, budget));
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JFrame frame;
+				try {
+					frame = new MainFrame("PFMS");
+					frame.setSize(800, 600);
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+//		App app = new App();
+//		app.setup();
+//		app.loginPage();
+//		app.registerPage();
+//		app.homePage();
+//		app.changePanel(app.loginPage);
+//		
+//		// Create users
+//		ArrayList<String[]> userInfo = User.getUserInfo();
+//		
+//		// Create all users
+//		for (int i = 0; i < userInfo.size(); i++) {
+//			int userId = Integer.parseInt(userInfo.get(i)[0]);
+//			String username = userInfo.get(i)[1];
+//			String userPwd = userInfo.get(i)[2];
+//			String email = userInfo.get(i)[3];
+//			float budget = Float.parseFloat(userInfo.get(i)[4]);
+//			
+//			users.add(new User(userId, username, userPwd, email, budget));
+//		}
 
 		
 	}
