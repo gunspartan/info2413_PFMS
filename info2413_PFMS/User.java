@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
 public class User {
 	int userId;
 	String username;
@@ -70,17 +73,28 @@ public class User {
 	
 	// Create User
 	// Add user to database
-	public static void createUser(String username, String userPwd, String email, float budget) throws Exception {
+	public static void createUser(String username, String userPwd, String email) throws Exception {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement(
-					"INSERT INTO UserInfo (Username, UserPwd, Email, Budget)" +
-					"VALUES ('" + username + "','" + userPwd + "','" + email + "'," + budget + ");");
+					"INSERT INTO UserInfo (Username, UserPwd, Email)" +
+					"VALUES ('" + username + "','" + userPwd + "','" + email + "');");
 			stmt.executeUpdate();
+			
+			JFrame successFrame = new JFrame("Account Created");
+			JLabel successMessage = new JLabel("Your account has been created.");
+			successFrame.add(successMessage);
+			successFrame.setSize(200, 150);
+			successFrame.setVisible(true);
 		} catch (Exception e) {
 			System.out.println(e);
+			JFrame errorFrame = new JFrame("Error Creating Account");
+			JLabel errorMessage = new JLabel("An Error Occurred.");
+			errorFrame.add(errorMessage);
+			errorFrame.setSize(200, 150);
+			errorFrame.setVisible(true);
 		} finally {
 			System.out.println("Insert completed");
 			App.closeQueitly(stmt);

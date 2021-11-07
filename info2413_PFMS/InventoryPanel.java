@@ -20,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+
+// TODO sorting
 public class InventoryPanel extends JPanel {
 	private final ContainerPanel parentPanel;
 	private final CardLayout cl;
@@ -67,6 +69,17 @@ public class InventoryPanel extends JPanel {
 		JLabel qtyLabel = new JLabel("Quantity");
 		JLabel expiredLabel = new JLabel("Expired");
 		JLabel editLabel = new JLabel("Edit");
+		
+		// Back to Home Button
+		JButton homeBtn = new JButton("Home");
+		homeBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parentPanel.handleInventoryPanelHomeBtn(e);
+			}
+			
+		});
 
 		// Layout
 		setLayout(new GridBagLayout());
@@ -92,6 +105,13 @@ public class InventoryPanel extends JPanel {
 		gc.gridx = 1;
 		gc.gridy = 0;
 		add(inventoryLabel, gc);
+		
+		// Add Button
+		gc.gridx = 2;
+		gc.gridy = 0;
+		add(homeBtn, gc);
+		
+		// Add Labels for list
 
 		listConstraints.anchor = GridBagConstraints.CENTER;
 		listConstraints.ipady = 10;
@@ -209,7 +229,7 @@ public class InventoryPanel extends JPanel {
 		inventoryScrollPane.setViewportView(inventoryPanel);
 		gc.ipady = 450;
 		gc.ipadx = 750;
-		gc.gridwidth = 2;
+		gc.gridwidth = 3;
 		gc.gridx = 0;
 		gc.gridy = 2;
 		add(inventoryScrollPane, gc);

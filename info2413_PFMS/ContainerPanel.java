@@ -48,13 +48,13 @@ public class ContainerPanel extends JPanel {
 		add(registerPanel, "2");
 		add(homePanel, "3");
 		add(inventoryPanel, "4");
-		cl.show(this, "4");
+		cl.show(this, "1");
 	}
 	
 	
 	
 	// ---- Handle Changing Panels ----
-	// Show Home Panel
+	// -- Login Page --
 	public void handleLoginPanelLoginBtn(ActionEvent e) {
 		cl.show(this, "3");
 	}
@@ -63,12 +63,15 @@ public class ContainerPanel extends JPanel {
 		cl.show(this, "2");
 	}
 	
-	// Go Back to Login Panel
+	// -- Register Page --
 	public void handleRegisterPanelBackBtn (ActionEvent e) {
 		cl.show(this, "1");
 	}
 	
-	// Show Inventory Panel
+	// -- Home Page --
+	public void handleHomePanelLogoutBtn(ActionEvent e) {
+		cl.show(this, "1");
+	}
 	public void handleHomePanelInventoryBtn(ActionEvent e,String inventorySelectedId, String inventorySelected) throws IOException, URISyntaxException {
 		// Check database for matching inventory
 		for (int i = 0; i < temp.size(); i ++) {
@@ -80,5 +83,11 @@ public class ContainerPanel extends JPanel {
 				cl.show(this, "4");
 			}
 		}
+	}
+	
+	
+	// -- Inventory Page --
+	public void handleInventoryPanelHomeBtn (ActionEvent e) {
+		cl.show(this, "3");
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -40,6 +41,24 @@ public class RegisterPanel extends JPanel {
 		
 		// Register Button
 		JButton registerBtn = new JButton("Register");
+		registerBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String newUsername = usernameField.getText();
+				String newPwd = passwordField.getText();
+				String newEmail = emailField.getText();
+				try {
+					User.createUser(newUsername, newPwd, newEmail);	
+					
+				} catch (Exception err) {
+					System.out.println(err);
+					
+				}
+				
+			}
+			
+		});
 		
 		// Back Button
 		JButton backBtn = new JButton("Back");

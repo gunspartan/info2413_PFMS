@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -46,8 +47,21 @@ public class LoginPanel extends JPanel {
 				String password = passwordField.getText();
 
 				// Authentication				
-				if ("test".equals(username) && "test".equals(password)) {
-					parentPanel.handleLoginPanelLoginBtn(e);
+				ArrayList<String[]> users;
+				try {
+					users = User.getUserInfo();
+					for (int i = 0; i < users.size(); i++) {
+						if (users.get(i)[1].equals(username) && users.get(i)[2].equals(password)) {
+							parentPanel.handleLoginPanelLoginBtn(e);	
+						}
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				// Test auth
+				if ("test1".equals(username) && "test1".equals(password)) {
+					parentPanel.handleLoginPanelLoginBtn(e);	
 				}
 			}
 
