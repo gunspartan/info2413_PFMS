@@ -1,5 +1,8 @@
 package info2413_PFMS;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class GroceryInventory {
@@ -70,4 +73,72 @@ public class GroceryInventory {
 	// calculateSpending
 	// Check total spending on all foods
 	
+	
+	// -- SQL Queries
+	// Get Inventories
+	public static ArrayList<String[]> getGroceryInventories(User currUser) {
+		if (currUser == null) {
+			return null;
+		}
+		
+		int userId = currUser.getUserId();
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT GroceryInventory.GroceryInventoryId, GroceryInventory.ShopDate, GroceryInventory.TotalSpent "
+					+ "FROM UserInfo INNER JOIN GroceryInventory "
+					+ "WHERE UserInfo.UserId = " + userId + " AND UserInfo.UserId = GroceryInventory.UserId;");
+			rs = stmt.executeQuery();
+			
+			ArrayList<String[]> array = new ArrayList<>();
+			while (rs.next()) {
+				String[] groceryInventory = new String[3];
+				groceryInventory[0] = rs.getString("GroceryInventoryId");
+				groceryInventory[1] = rs.getString("ShopDate");
+				groceryInventory[2] = rs.getString("TotalSpent");
+				array.add(groceryInventory);
+			}
+			System.out.println("All records have been selected");
+			return array;
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		
+		return null;
+	}
+	
+	public static String[] getGroceryInventoryById(int id) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT * FROM GroceryInventory "
+					+ "WHERE GroceryInventoryId = " + id + ";");
+			rs = stmt.executeQuery();
+			String[] groceryInventory = new String[3];
+			while (rs.next()) {
+				groceryInventory[0] = rs.getString("GroceryInventoryId");
+				groceryInventory[1] = rs.getString("ShopDate");
+				groceryInventory[2] = rs.getString("TotalSpent");
+			}
+			System.out.println("All records have been selected");
+			return groceryInventory;
+		} catch (Exception e) {
+			System.out.println(e);
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		
+		return null;
+	}
 }

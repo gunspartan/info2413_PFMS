@@ -13,27 +13,9 @@ import javax.swing.table.DefaultTableModel;
 
 // TODO Move GUI Components to Individual Classes
 public class App {
-	
-	// Setup frame
-	public JFrame frame;
-	
-	// Add Shopping List
-	
-	// Edit Shopping List
-	
-	// Add Grocery Item
-	
-	// Edit Grocery Item
-	
-	// Manage Categories
-
-	// Notifications
-	
-	// Reports
-	
-	
 	// Main
 	public static void main(String s[]) {
+		App app = new App();
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame frame;
@@ -51,15 +33,18 @@ public class App {
 		});
 		
 	}
-
 	
-	// TODO Add Database Connection
+	// Connect to database
 	public static Connection getConnection() throws Exception {
 		try {
 			String driver = "com.mysql.cj.jdbc.Driver";
 			String url = "jdbc:mysql://localhost:3306/info2413";
-			String username = "root";
-			String password = "Gu6570$$";
+			// ------ CREATE A USER IN YOUR LOCAL DATABASE WITH THESE COMMANDS -------
+			// CREATE USER 'info2413'@'localhost' identified by 'PFMS_ADMIN';
+			// GRANT ALL PRIVILEGES ON info2413.* TO 'info2413'@'localhost';
+			// FLUSH PRIVILEGES;
+			String username = "info2413";
+			String password = "PFMS_ADMIN";
 			Class.forName(driver);
 			
 			Connection conn = DriverManager.getConnection(url, username, password);
@@ -71,6 +56,7 @@ public class App {
 		
 		return null;
 	}
+	
 	// Close Database Connection
 	public static void closeQueitly(Connection conn) {
 		if (conn != null) {

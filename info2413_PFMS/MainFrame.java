@@ -10,7 +10,6 @@ import javax.swing.*;
 public class MainFrame extends JFrame {
 	
 	private ContainerPanel containerPanel;
-
 	
 	public MainFrame(String text) throws Exception {
 		super(text);
@@ -20,16 +19,6 @@ public class MainFrame extends JFrame {
 		containerPanel = new ContainerPanel();
 		// Add Swing components to content
 		add(containerPanel);
-
-		
-	
 	}
-	
-//	public JPanel getLoginPanel() {
-//		return loginPanel;
-//	}
-//	
-//	public JPanel getRegisterPanel() {
-//		return registerPanel;
-//	}
 }
+	

@@ -52,7 +52,9 @@ public class LoginPanel extends JPanel {
 					users = User.getUserInfo();
 					for (int i = 0; i < users.size(); i++) {
 						if (users.get(i)[1].equals(username) && users.get(i)[2].equals(password)) {
-							parentPanel.handleLoginPanelLoginBtn(e);	
+							User currUser = new User(users.get(i)[0], users.get(i)[1], users.get(i)[2], users.get(i)[3], users.get(i)[4]);
+							parentPanel.setCurrUser(currUser);
+							parentPanel.handleLoginPanelLoginBtn(e);
 						}
 					}
 				} catch (Exception e1) {
@@ -60,9 +62,9 @@ public class LoginPanel extends JPanel {
 				}
 				
 				// Test auth
-				if ("test1".equals(username) && "test1".equals(password)) {
-					parentPanel.handleLoginPanelLoginBtn(e);	
-				}
+//				if ("test1".equals(username) && "test1".equals(password)) {
+//					parentPanel.handleLoginPanelLoginBtn(e);
+//				}
 			}
 
 		});

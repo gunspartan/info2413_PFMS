@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,18 +23,18 @@ import javax.swing.JScrollPane;
 // TODO Show total spent
 
 public class HomePanel extends JPanel {
-	
 	private final ContainerPanel parentPanel;
 	private final CardLayout cl;
 	private final JScrollPane inventoryScrollPane;
 	private final JPanel inventoryPanel;
-	private final LinkedList<String> temp;
+	private ArrayList<String[]> groceryInventories;
+	private User currUser;
 	
-	public HomePanel(ContainerPanel parentPanel, CardLayout cl, List<String> temp) {
+	public HomePanel(ContainerPanel parentPanel, CardLayout cl, User currUser) {
+		// Get inventories from database
+		groceryInventories = GroceryInventory.getGroceryInventories(currUser);
 		this.parentPanel = parentPanel;
 		this.cl = cl;
-		this.temp = (LinkedList<String>) temp;
-		
 		
 		// Set size	
 		Dimension size = getPreferredSize();
@@ -49,6 +50,7 @@ public class HomePanel extends JPanel {
 		JLabel titleLabel = new JLabel("Home");
 		JLabel inventoryLabel = new JLabel("My Inventories");
 		JLabel shoppingDateLabel = new JLabel("Shopping Date:");
+		JLabel totalSpentLabel = new JLabel("Total Spent: ");
 		
 		// Log out Button
 		JButton logoutBtn = new JButton("Logout");
@@ -95,44 +97,48 @@ public class HomePanel extends JPanel {
 		gc.gridx = 0;
 		gc.gridy = 1;
 		add(shoppingDateLabel, gc);
+		gc.gridx = 1;
+		gc.gridy = 1;
+		add(totalSpentLabel, gc);
 		
-
-		
-		
-		
-		// Get inventories from database
-		for (int i = 0; i < temp.size(); i++) {
-			JLabel inventoryId = new JLabel(Integer.toString(i));
-			// Create Label for each inventory
-			JLabel dateLabel = new JLabel(temp.get(i));
-			// Create a button for each inventory
-			JButton inventoryBtn = new JButton("OPEN");
-			// Add Action Listener for each button
-			inventoryBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					String inventorySelectedId = inventoryId.getText();
-					String inventorySelected = dateLabel.getText();
-					try {
-						parentPanel.handleHomePanelInventoryBtn(e, inventorySelectedId, inventorySelected);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (URISyntaxException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-				
-			});
-			// Add Labels
+		// Check if inventories are empty
+		if (groceryInventories.isEmpty()) {
+			JLabel emptyInventoryLabel = new JLabel("Your inventory is empty");
+			// Add Label
 			listConstraints.gridx = 0;
-			listConstraints.gridy = i;
-			inventoryPanel.add(dateLabel, listConstraints);
-			// Add Buttons
-			listConstraints.gridx = 1;
-			listConstraints.gridy = i;
-			inventoryPanel.add(inventoryBtn, listConstraints);
+			listConstraints.gridy = 0;
+			inventoryPanel.add(emptyInventoryLabel, listConstraints);
+		} else {
+			for (int i = 0; i < groceryInventories.size(); i++) {
+				// Create Labels
+				JLabel inventoryIdLabel = new JLabel(groceryInventories.get(i)[0]);
+				JLabel dateLabel = new JLabel(groceryInventories.get(i)[1]);
+				JLabel spendingLabel = new JLabel(groceryInventories.get(i)[2]);
+				JButton inventoryBtn = new JButton("OPEN");
+				inventoryBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String inventorySelectedId = inventoryIdLabel.getText();
+						try {
+							parentPanel.handleHomePanelInventoryBtn(e, Integer.parseInt(inventorySelectedId));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						
+					}
+				});
+				// Add Labels
+				listConstraints.gridx = 0;
+				listConstraints.gridy = i;
+				inventoryPanel.add(dateLabel, listConstraints);
+				listConstraints.gridx = 1;
+				listConstraints.gridy = i;
+				inventoryPanel.add(spendingLabel, listConstraints);
+				// Add Buttons
+				listConstraints.gridx = 2;
+				listConstraints.gridy = i;
+				inventoryPanel.add(inventoryBtn, listConstraints);
+			}
 		}
 		
 		// Layout for scroll pane

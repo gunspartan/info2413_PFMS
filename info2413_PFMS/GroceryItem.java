@@ -1,5 +1,8 @@
 package info2413_PFMS;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class GroceryItem {
@@ -97,4 +100,42 @@ public class GroceryItem {
 	// checkQuantity
 	// If quantity >= 3 -> send low count notification
 	
+	
+	// Get Items from database
+	public static ArrayList<String[]> getGroceryItems(int inventoryId) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT GroceryItem.GroceryItemId, GroceryItem.Img, GroceryItem.FoodName, GroceryItem.Price, GroceryItem.ExpiryDate, GroceryItem.ShopDate, GroceryItem.Qty, GroceryItem.Expired "
+					+ "FROM GroceryItem INNER JOIN GroceryInventory "
+					+ "WHERE GroceryInventory.GroceryInventoryId = " + inventoryId + " AND GroceryInventory.GroceryInventoryId = GroceryItem.GroceryInventoryId;");
+			rs = stmt.executeQuery();
+			
+			ArrayList<String[]> array = new ArrayList<>();
+			while (rs.next()) {
+				String[] groceryItem = new String[8];
+				groceryItem[0] = rs.getString("GroceryItemId");
+				groceryItem[1] = rs.getString("Img");
+				groceryItem[2] = rs.getString("FoodName");
+				groceryItem[3] = rs.getString("Price");
+				groceryItem[4] = rs.getString("ExpiryDate");
+				groceryItem[5] = rs.getString("ShopDate");
+				groceryItem[6] = rs.getString("Qty");
+				groceryItem[7] = rs.getString("Expired");
+				array.add(groceryItem);
+			}
+			System.out.println("All records have been selected");
+			return array;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		
+		return null;
+	}
 }

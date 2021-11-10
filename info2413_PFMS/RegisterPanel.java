@@ -15,7 +15,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class RegisterPanel extends JPanel {
-	
 	private final ContainerPanel parentPanel;
 	private final CardLayout cl;
 	

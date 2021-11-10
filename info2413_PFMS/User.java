@@ -20,12 +20,12 @@ public class User {
 	LinkedList<GroceryInventory> inventory = new LinkedList<GroceryInventory>();
 	
 	// Constructor
-	User(int userId, String username, String password, String email, float budget) throws Exception {
-		this.userId = userId;
+	User(String userId, String username, String password, String email, String budget) throws Exception {
+		this.userId = Integer.parseInt(userId);
 		this.username = username;
 		this.password = password;
 		this.email = email;
-		this.budget = budget;
+		this.budget = Float.parseFloat(budget);
 	}
 	
 	// Setters and getters
@@ -49,6 +49,10 @@ public class User {
 	public void setBudget(float newBudget) {
 		budget = newBudget;
 		// Make change in database
+	}
+	
+	public int getUserId() {
+		return userId;
 	}
 	
 	public String getUsername() {
@@ -126,6 +130,7 @@ public class User {
 		inventory.remove(newInventory);
 	}
 	
+	// Get user info from database
 	public static ArrayList<String[]> getUserInfo() throws Exception {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -136,7 +141,7 @@ public class User {
 			
 			res = stmt.executeQuery();
 			
-			ArrayList<String[]> array = new ArrayList<String[]>();
+			ArrayList<String[]> array = new ArrayList<>();
 			while (res.next()) {
 				String[] userInfo = new String[5];
 				userInfo[0] = res.getString("UserId");
