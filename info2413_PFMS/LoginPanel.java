@@ -50,12 +50,19 @@ public class LoginPanel extends JPanel {
 				ArrayList<String[]> users;
 				try {
 					users = User.getUserInfo();
-					for (int i = 0; i < users.size(); i++) {
+					boolean found = false;
+					int i = 0;
+					while (i < users.size() && !found) {
 						if (users.get(i)[1].equals(username) && users.get(i)[2].equals(password)) {
+							found = true;
 							User currUser = new User(users.get(i)[0], users.get(i)[1], users.get(i)[2], users.get(i)[3], users.get(i)[4]);
 							parentPanel.setCurrUser(currUser);
 							parentPanel.handleLoginPanelLoginBtn(e);
 						}
+						i++;
+					}
+					if (!found) {
+						new PopupFrame(PopupType.LOGIN_ERROR);
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();

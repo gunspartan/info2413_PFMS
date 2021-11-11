@@ -10,18 +10,16 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 
 public class ContainerPanel extends JPanel {
-	private App app;
 	private final static CardLayout cl = new CardLayout();
 	private LoginPanel loginPanel;
 	private RegisterPanel registerPanel;
 	private HomePanel homePanel;
 	private InventoryPanel inventoryPanel;
-	private String currInventory = "";
+	private NewInventoryPanel newInventoryPanel;
+	private NewItemPanel newItemPanel;
 	private User currUser = null;
 
 	public ContainerPanel() throws Exception {
-		this.app = app;
-
 		loginPanel = new LoginPanel(this, cl);
 
 		// Set Layout
@@ -57,21 +55,49 @@ public class ContainerPanel extends JPanel {
 		cl.show(this, "1");
 	}
 	
-
 	public void handleHomePanelInventoryBtn(ActionEvent e, int inventorySelectedId) throws IOException, URISyntaxException {
 		// Check database for matching inventory
 		inventoryPanel = new InventoryPanel(this, cl, inventorySelectedId);
 		add(inventoryPanel, "4");
 		cl.show(this, "4");
-		
 	}
 
-
-	// -- Inventory Page --
-	public void handleInventoryPanelHomeBtn (ActionEvent e) {
+	public void handleHomePanelNewInventoryBtn(ActionEvent e, User user) {
+		newInventoryPanel = new NewInventoryPanel(this, cl, user);
+		add(newInventoryPanel, "5");
+		cl.show(this, "5");
+	}
+	
+	// -- New Inventory Page --
+	public void handleNewInventoryPanelBackBtn(ActionEvent e) {
+		// Remake the home panel
+		homePanel = new HomePanel(this, cl, currUser);
+		add(homePanel, "3");
 		cl.show(this, "3");
 	}
 
+	// -- Inventory Page --
+	public void handleInventoryPanelHomeBtn (ActionEvent e) {
+		// Remake the home panel
+		homePanel = new HomePanel(this, cl, currUser);
+		add(homePanel, "3");
+		cl.show(this, "3");
+	}
+	
+	public void handleInventoryPanelAddItemBtn(ActionEvent e, int inventoryId) {
+		newItemPanel = new NewItemPanel(this, cl, inventoryId);
+		add(newItemPanel, "6");
+		cl.show(this, "6");
+	}
+
+
+	// -- New Item Page --
+	public void handleNewItemPanelBackBtn(ActionEvent e, int inventoryId) {
+		// Check database for matching inventory
+		inventoryPanel = new InventoryPanel(this, cl, inventoryId);
+		add(inventoryPanel, "4");
+		cl.show(this, "4");
+	}
 
 
 	// Set current user

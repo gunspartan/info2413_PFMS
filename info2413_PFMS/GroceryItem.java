@@ -108,22 +108,21 @@ public class GroceryItem {
 		ResultSet rs = null;
 		try {
 			conn = App.getConnection();
-			stmt = conn.prepareStatement("SELECT GroceryItem.GroceryItemId, GroceryItem.Img, GroceryItem.FoodName, GroceryItem.Price, GroceryItem.ExpiryDate, GroceryItem.ShopDate, GroceryItem.Qty, GroceryItem.Expired "
+			stmt = conn.prepareStatement("SELECT GroceryItem.GroceryItemId, GroceryItem.Img, GroceryItem.FoodName, GroceryItem.Price, GroceryItem.ExpiryDate, GroceryItem.Qty, GroceryItem.Expired "
 					+ "FROM GroceryItem INNER JOIN GroceryInventory "
 					+ "WHERE GroceryInventory.GroceryInventoryId = " + inventoryId + " AND GroceryInventory.GroceryInventoryId = GroceryItem.GroceryInventoryId;");
 			rs = stmt.executeQuery();
 			
 			ArrayList<String[]> array = new ArrayList<>();
 			while (rs.next()) {
-				String[] groceryItem = new String[8];
+				String[] groceryItem = new String[7];
 				groceryItem[0] = rs.getString("GroceryItemId");
 				groceryItem[1] = rs.getString("Img");
 				groceryItem[2] = rs.getString("FoodName");
 				groceryItem[3] = rs.getString("Price");
 				groceryItem[4] = rs.getString("ExpiryDate");
-				groceryItem[5] = rs.getString("ShopDate");
-				groceryItem[6] = rs.getString("Qty");
-				groceryItem[7] = rs.getString("Expired");
+				groceryItem[5] = rs.getString("Qty");
+				groceryItem[6] = rs.getString("Expired");
 				array.add(groceryItem);
 			}
 			System.out.println("All records have been selected");
@@ -137,5 +136,23 @@ public class GroceryItem {
 		}
 		
 		return null;
+	}
+	
+	// Create Item
+	public static void createItem(int inventoryId, String img, String name, String category, float price, String expiry, int qty) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("INSERT INTO GroceryItem (GroceryInventoryId, Category, FoodName, Price, ExpiryDate, Qty, Img) "
+					+ "VALUES (" + inventoryId + ",'" + category + "','" + name + "'," + price + ",'" + expiry + "'," + qty + ",'" + img + "');");
+			stmt.executeUpdate();
+			System.out.println("Successfully created item");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
 	}
 }

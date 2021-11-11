@@ -24,6 +24,9 @@ public class App {
 					frame.setSize(800, 600);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setVisible(true);
+					
+					// Test update spending function
+					GroceryInventory.updateTotalSpending(2);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -6,75 +6,31 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class GroceryInventory {
-	// GroceryInventory has a user
-	User user;
-	float totalSpent;
-	String shoppingDate;
-	// GroceryInventory has a list of items
-	ArrayList<GroceryItem> items = new ArrayList<GroceryItem>();
-	
-	// Constructor
-	GroceryInventory(User user, String shoppingDate) {
-		this.user = user;
-		this.shoppingDate = shoppingDate;
-	}
-	
-	// Setters and getters
-	public void setUser(User newUser) {
-		user = newUser;
-		// Make change to database
-	}
-	
-	public void setShoppingDate(String newShoppingDate) {
-		shoppingDate = newShoppingDate;
-		// Make change to database
-	}
-	
-	public User getUser() {
-		return user;
-	}
-	
-	public String getShoppingDate() {
-		return shoppingDate;
-	}
-	
+	// -- SQL Queries -- 
 	// createGroceryInventory
-	// Create GroceryInventory in database
-	
-	// deleteGroceryInventory
-	// Delete GroceryInventory in database
-	
-	// addGroceryItem
-	// Add item to Inventory
-	public void addGroceryItem(GroceryItem newItem) {
-		items.add(newItem);
-		// Make change to database
-	}
-	
-	// deleteGroceryItem
-	// Delete item from Inventory
-	public void deleteGroceryItem(GroceryItem newItem) {
-		items.remove(newItem);
-		// Make change to database
-	}
-	
-	// checkExpiry
-	// Check expiry dates of all foods
-	public ArrayList<GroceryItem> checkExpiry() {
-		ArrayList<GroceryItem> expiringItems = new ArrayList<GroceryItem>();
-		for (int i = items.size() - 1; i >= 0; i--) {
-			// If expiring
-			// Add to expiringItems
-		}
+	public static void createGroceryInventory(User user, String shopDate) {
+		int userId = user.getUserId();
 		
-		return expiringItems;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement(
+					"INSERT INTO GroceryInventory (UserId, ShopDate) "
+					+ "VALUES (" + userId + ", '" + shopDate + "');");
+			stmt.executeUpdate();
+			
+			System.out.println("Success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			// Error popup
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
 	}
-	
-	// calculateSpending
-	// Check total spending on all foods
-	
-	
-	// -- SQL Queries
+
+
 	// Get Inventories
 	public static ArrayList<String[]> getGroceryInventories(User currUser) {
 		if (currUser == null) {
@@ -101,10 +57,9 @@ public class GroceryInventory {
 				groceryInventory[2] = rs.getString("TotalSpent");
 				array.add(groceryInventory);
 			}
-			System.out.println("All records have been selected");
 			return array;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			App.closeQueitly(rs);
 			App.closeQueitly(stmt);
@@ -114,6 +69,7 @@ public class GroceryInventory {
 		return null;
 	}
 	
+	// Get Inventory By Id
 	public static String[] getGroceryInventoryById(int id) {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -129,10 +85,9 @@ public class GroceryInventory {
 				groceryInventory[1] = rs.getString("ShopDate");
 				groceryInventory[2] = rs.getString("TotalSpent");
 			}
-			System.out.println("All records have been selected");
 			return groceryInventory;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			App.closeQueitly(rs);
 			App.closeQueitly(stmt);
@@ -140,5 +95,52 @@ public class GroceryInventory {
 		}
 		
 		return null;
+	}
+	
+	// Update Spending
+	public static void updateTotalSpending(int id) {
+		float totalSpent = 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmt1 = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT ROUND(SUM(GroceryItem.Price) * GroceryItem.Qty, 2) AS TotalSpent "
+					+ "FROM GroceryItem INNER JOIN GroceryInventory "
+					+ "WHERE GroceryItem.GroceryInventoryId = GroceryInventory.GroceryInventoryId AND GroceryInventory.GroceryInventoryId = " + id + ";");
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				totalSpent = rs.getFloat("TotalSpent");
+			}
+			
+			stmt1 = conn.prepareStatement("UPDATE GroceryInventory "
+					+ "SET TotalSpent = " + totalSpent + "WHERE GroceryInventoryId = " + id + ";");
+			stmt1.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(stmt1);
+			App.closeQueitly(conn);
+		}
+		
+	}
+	
+	// Delete Inventory
+	public static void deleteInventory(int id) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("DELETE FROM GroceryInventory WHERE GroceryInventoryId = " + id + ";");
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
 	}
 }

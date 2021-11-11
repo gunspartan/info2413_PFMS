@@ -87,20 +87,11 @@ public class User {
 					"VALUES ('" + username + "','" + userPwd + "','" + email + "');");
 			stmt.executeUpdate();
 			
-			JFrame successFrame = new JFrame("Account Created");
-			JLabel successMessage = new JLabel("Your account has been created.");
-			successFrame.add(successMessage);
-			successFrame.setSize(200, 150);
-			successFrame.setVisible(true);
+			new PopupFrame(PopupType.CREATE_USER_SUCCESS);
 		} catch (Exception e) {
-			System.out.println(e);
-			JFrame errorFrame = new JFrame("Error Creating Account");
-			JLabel errorMessage = new JLabel("An Error Occurred.");
-			errorFrame.add(errorMessage);
-			errorFrame.setSize(200, 150);
-			errorFrame.setVisible(true);
+			e.printStackTrace();
+			new PopupFrame(PopupType.CREATE_USER_ERROR);
 		} finally {
-			System.out.println("Insert completed");
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
 		}
@@ -152,11 +143,10 @@ public class User {
 				
 				array.add(userInfo);
 			}
-			System.out.println("All records have been selected");
 			return array;
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		} finally {
 			App.closeQueitly(res);
 			App.closeQueitly(stmt);

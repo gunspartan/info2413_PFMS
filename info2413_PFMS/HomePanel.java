@@ -31,6 +31,7 @@ public class HomePanel extends JPanel {
 	private User currUser;
 	
 	public HomePanel(ContainerPanel parentPanel, CardLayout cl, User currUser) {
+		this.currUser = currUser;
 		// Get inventories from database
 		groceryInventories = GroceryInventory.getGroceryInventories(currUser);
 		this.parentPanel = parentPanel;
@@ -63,6 +64,17 @@ public class HomePanel extends JPanel {
 			
 		});
 		
+		// New Inventory Button
+		JButton newInventoryBtn = new JButton("New Inventory");
+		newInventoryBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parentPanel.handleHomePanelNewInventoryBtn(e, currUser);
+			}
+			
+		});
+		
 		// Layout
 		setLayout(new GridBagLayout());
 		inventoryPanel.setLayout(new GridBagLayout());
@@ -86,6 +98,10 @@ public class HomePanel extends JPanel {
 		// Add Button
 		gc.gridx = 2;
 		gc.gridy = 0;
+		add(newInventoryBtn, gc);
+		
+		gc.gridx = 3;
+		gc.gridy = 0;
 		add(logoutBtn, gc);
 		
 		// Add Label
@@ -93,20 +109,20 @@ public class HomePanel extends JPanel {
 		gc.gridy = 0;
 		add(inventoryLabel, gc);
 		
-		gc.anchor = GridBagConstraints.PAGE_END;
-		gc.gridx = 0;
-		gc.gridy = 1;
-		add(shoppingDateLabel, gc);
-		gc.gridx = 1;
-		gc.gridy = 1;
-		add(totalSpentLabel, gc);
+		listConstraints.anchor = GridBagConstraints.PAGE_START;
+		listConstraints.gridx = 0;
+		listConstraints.gridy = 0;
+		inventoryPanel.add(shoppingDateLabel, listConstraints);
+		listConstraints.gridx = 1;
+		listConstraints.gridy = 0;
+		inventoryPanel.add(totalSpentLabel, listConstraints);
 		
 		// Check if inventories are empty
 		if (groceryInventories.isEmpty()) {
 			JLabel emptyInventoryLabel = new JLabel("Your inventory is empty");
 			// Add Label
 			listConstraints.gridx = 0;
-			listConstraints.gridy = 0;
+			listConstraints.gridy = 1;
 			inventoryPanel.add(emptyInventoryLabel, listConstraints);
 		} else {
 			for (int i = 0; i < groceryInventories.size(); i++) {
@@ -129,14 +145,14 @@ public class HomePanel extends JPanel {
 				});
 				// Add Labels
 				listConstraints.gridx = 0;
-				listConstraints.gridy = i;
+				listConstraints.gridy = i + 1;
 				inventoryPanel.add(dateLabel, listConstraints);
 				listConstraints.gridx = 1;
-				listConstraints.gridy = i;
+				listConstraints.gridy = i + 1;
 				inventoryPanel.add(spendingLabel, listConstraints);
 				// Add Buttons
 				listConstraints.gridx = 2;
-				listConstraints.gridy = i;
+				listConstraints.gridy = i + 1;
 				inventoryPanel.add(inventoryBtn, listConstraints);
 			}
 		}
@@ -147,7 +163,7 @@ public class HomePanel extends JPanel {
 		inventoryScrollPane.setViewportView(inventoryPanel);
 		gc.ipady = 450;
 		gc.ipadx = 750;
-		gc.gridwidth = 3;
+		gc.gridwidth = 4;
 		gc.gridx = 0;
 		gc.gridy = 2;
 		add(inventoryScrollPane, gc);

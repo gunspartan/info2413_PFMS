@@ -59,11 +59,29 @@ public class InventoryPanel extends JPanel {
 		JLabel nameLabel = new JLabel("Name");
 		JLabel priceLabel = new JLabel("Price");
 		JLabel expiryLabel = new JLabel("Expiry Date");
-		JLabel shopDateLabel = new JLabel("Purchase Date");
 		JLabel qtyLabel = new JLabel("Quantity");
 		JLabel expiredLabel = new JLabel("Expired");
-		JLabel editLabel = new JLabel("Edit");
+		// Add Item Button
+		JButton addItemBtn = new JButton("Add New Item");
+		addItemBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parentPanel.handleInventoryPanelAddItemBtn(e, inventoryId);
+			}
+		});
+		
 
+		// Delete Inventory Button
+		JButton deleteInventoryBtn = new JButton("Delete Inventory");
+		deleteInventoryBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GroceryInventory.deleteInventory(inventoryId);
+				// Return to home page after deletion
+				parentPanel.handleInventoryPanelHomeBtn(e);
+			}
+			
+		});
 		// Back to Home Button
 		JButton homeBtn = new JButton("Home");
 		homeBtn.addActionListener(new ActionListener() {
@@ -103,11 +121,14 @@ public class InventoryPanel extends JPanel {
 		// Add Button
 		gc.gridx = 2;
 		gc.gridy = 0;
+		add(deleteInventoryBtn, gc);
+		gc.gridx = 3;
+		gc.gridy = 0;
 		add(homeBtn, gc);
 
 		// Add Labels for list
 
-		listConstraints.anchor = GridBagConstraints.CENTER;
+		listConstraints.anchor = GridBagConstraints.PAGE_START;
 		listConstraints.ipady = 10;
 		listConstraints.ipadx = 15;
 		listConstraints.gridx = 0;
@@ -125,27 +146,23 @@ public class InventoryPanel extends JPanel {
 		listConstraints.gridx = 3;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(expiryLabel, listConstraints);
-
+		
 		listConstraints.gridx = 4;
-		listConstraints.gridy = 0;
-		inventoryPanel.add(shopDateLabel, listConstraints);
-
-		listConstraints.gridx = 5;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(qtyLabel, listConstraints);
 
-		listConstraints.gridx = 6;
+		listConstraints.gridx = 5;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(expiredLabel, listConstraints);
-
-		listConstraints.gridx = 7;
+		
+		listConstraints.gridx = 6;
 		listConstraints.gridy = 0;
-		inventoryPanel.add(editLabel, listConstraints);
+		inventoryPanel.add(addItemBtn, listConstraints);
 
 		listConstraints.ipady = 5;
 
 		// Get inventories from database
-		if (groceryItems == null) {
+		if (groceryItems == null || groceryItems.size() == 0) {
 			JLabel emptyGroceryItemsLabel = new JLabel("You have no items");
 			listConstraints.gridx = 0;
 			listConstraints.gridy = 2;
@@ -162,7 +179,7 @@ public class InventoryPanel extends JPanel {
 				// Load image
 				BufferedImage image;
 				try {
-					image = ImageIO.read(new File(getClass().getResource(uri).toURI()));
+					image = ImageIO.read(new File(uri));
 					// Resize image
 					Image newImg = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
 					img = new JLabel(new ImageIcon(newImg));
@@ -174,9 +191,8 @@ public class InventoryPanel extends JPanel {
 				JLabel name = new JLabel(groceryItems.get(i)[2]);
 				JLabel price = new JLabel(groceryItems.get(i)[3]);
 				JLabel expiry = new JLabel(groceryItems.get(i)[4]);
-				JLabel shopDate = new JLabel(groceryItems.get(i)[5]);
-				JLabel qty = new JLabel(groceryItems.get(i)[6]);
-				JLabel expired = new JLabel(groceryItems.get(i)[7].equals("0") ? "No" : "Yes");
+				JLabel qty = new JLabel(groceryItems.get(i)[5]);
+				JLabel expired = new JLabel(groceryItems.get(i)[6].equals("0") ? "No" : "Yes");
 				// Create a button for each item
 				JButton editBtn = new JButton("EDIT");
 				// Add Action Listener for each button
@@ -210,17 +226,13 @@ public class InventoryPanel extends JPanel {
 
 				listConstraints.gridx = 4;
 				listConstraints.gridy = i + 2;
-				inventoryPanel.add(shopDate, listConstraints);
+				inventoryPanel.add(qty, listConstraints);
 
 				listConstraints.gridx = 5;
 				listConstraints.gridy = i + 2;
-				inventoryPanel.add(qty, listConstraints);
-
-				listConstraints.gridx = 6;
-				listConstraints.gridy = i + 2;
 				inventoryPanel.add(expired, listConstraints);
 
-				listConstraints.gridx = 7;
+				listConstraints.gridx = 6;
 				listConstraints.gridy = i + 2;
 				inventoryPanel.add(editBtn, listConstraints);
 			}
@@ -233,7 +245,7 @@ public class InventoryPanel extends JPanel {
 		inventoryScrollPane.setViewportView(inventoryPanel);
 		gc.ipady = 450;
 		gc.ipadx = 750;
-		gc.gridwidth = 3;
+		gc.gridwidth = 4;
 		gc.gridx = 0;
 		gc.gridy = 2;
 		add(inventoryScrollPane, gc);
