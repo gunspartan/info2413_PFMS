@@ -67,9 +67,7 @@ public class User {
 		return email;
 	}
 	
-	public float getBudget() {
-		return budget;
-	}
+	
 	
 	public LinkedList<GroceryInventory> getInventory() {
 		return inventory;
@@ -97,20 +95,22 @@ public class User {
 		}
 	}
 	
-	// Login
-	// Check database for username and corresponding password
-	
-	// updateUser
-	// Update user information to database
-	
-	// createBudget
-	// Add budget to the database
-	
-	// updateBudget
-	// Update budget to the database
-	
-	// checkBudget
-	// Send notification if budget is low
+	// Set Budget
+	public static void setBudget(User user, String budget) {
+		int userId = user.getUserId();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("UPDATE UserInfo SET Budget = " + budget + " WHERE UserId = " + userId + ";");
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+	}
 	
 	// Manage inventories
 	public void addGroceryInventory(GroceryInventory newInventory) {
@@ -154,5 +154,30 @@ public class User {
 		}
 		
 		return null;
+	}
+	
+	// Get user budget
+	public float getBudget(int id) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet res = null;
+		float userBudget = 0;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT * FROM UserInfo");
+			
+			res = stmt.executeQuery();
+			while (res.next()) {
+				userBudget = res.getFloat("Budget");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(res);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		return userBudget;
 	}
 }

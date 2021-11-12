@@ -57,9 +57,11 @@ public class InventoryPanel extends JPanel {
 		// Items table
 		JLabel imgLabel = new JLabel("Image");
 		JLabel nameLabel = new JLabel("Name");
+		JLabel categoryLabel = new JLabel("Category");
 		JLabel priceLabel = new JLabel("Price");
 		JLabel expiryLabel = new JLabel("Expiry Date");
-		JLabel qtyLabel = new JLabel("Quantity");
+		JLabel qtyLabel = new JLabel("# Remaining");
+		JLabel consumedLabel = new JLabel("# Consumed");
 		JLabel expiredLabel = new JLabel("Expired");
 		// Add Item Button
 		JButton addItemBtn = new JButton("Add New Item");
@@ -138,24 +140,33 @@ public class InventoryPanel extends JPanel {
 		listConstraints.gridx = 1;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(nameLabel, listConstraints);
-
+		
 		listConstraints.gridx = 2;
 		listConstraints.gridy = 0;
-		inventoryPanel.add(priceLabel, listConstraints);
+		inventoryPanel.add(categoryLabel, listConstraints);
+		
 
 		listConstraints.gridx = 3;
 		listConstraints.gridy = 0;
-		inventoryPanel.add(expiryLabel, listConstraints);
-		
+		inventoryPanel.add(priceLabel, listConstraints);
+
 		listConstraints.gridx = 4;
 		listConstraints.gridy = 0;
-		inventoryPanel.add(qtyLabel, listConstraints);
-
+		inventoryPanel.add(expiryLabel, listConstraints);
+		
 		listConstraints.gridx = 5;
+		listConstraints.gridy = 0;
+		inventoryPanel.add(qtyLabel, listConstraints);
+		
+		listConstraints.gridx = 6;
+		listConstraints.gridy = 0;
+		inventoryPanel.add(consumedLabel, listConstraints);
+
+		listConstraints.gridx = 7;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(expiredLabel, listConstraints);
 		
-		listConstraints.gridx = 6;
+		listConstraints.gridx = 8;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(addItemBtn, listConstraints);
 
@@ -171,7 +182,7 @@ public class InventoryPanel extends JPanel {
 			for (int i = 0; i < groceryItems.size(); i++) {
 
 				// Create Label for each item
-				JLabel itemId = new JLabel((groceryItems.get(i)[0]));
+				JLabel itemIdLabel = new JLabel((groceryItems.get(i)[0]));
 
 				// Get image file
 				JLabel img;
@@ -189,19 +200,23 @@ public class InventoryPanel extends JPanel {
 				}
 
 				JLabel name = new JLabel(groceryItems.get(i)[2]);
-				JLabel price = new JLabel(groceryItems.get(i)[3]);
-				JLabel expiry = new JLabel(groceryItems.get(i)[4]);
-				JLabel qty = new JLabel(groceryItems.get(i)[5]);
-				JLabel expired = new JLabel(groceryItems.get(i)[6].equals("0") ? "No" : "Yes");
+				JLabel category = new JLabel(groceryItems.get(i)[3]);
+				JLabel price = new JLabel(groceryItems.get(i)[4]);
+				JLabel expiry = new JLabel(groceryItems.get(i)[5]);
+//				JLabel qty = new JLabel(groceryItems.get(i)[6]);
+				int itemId = Integer.parseInt(groceryItems.get(i)[0]);
+				int remaining = GroceryItem.checkQuantity(itemId);
+				JLabel qty = new JLabel(Integer.toString(remaining));
+				JLabel numConsumed = new JLabel(groceryItems.get(i)[7]);
+				JLabel expired = new JLabel(groceryItems.get(i)[8].equals("0") ? "No" : "Yes");
 				// Create a button for each item
 				JButton editBtn = new JButton("EDIT");
 				// Add Action Listener for each button
 				editBtn.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-
-						System.out.println("Pressed editBtn with ID of: " + itemId.getText());
-
+						int itemId = Integer.parseInt(itemIdLabel.getText());
+						parentPanel.handleInventoryPanelEditItemBtn(e, inventoryId, itemId);
 					}
 
 				});
@@ -215,24 +230,32 @@ public class InventoryPanel extends JPanel {
 				listConstraints.gridx = 1;
 				listConstraints.gridy = i + 2;
 				inventoryPanel.add(name, listConstraints);
-
+				
 				listConstraints.gridx = 2;
 				listConstraints.gridy = i + 2;
-				inventoryPanel.add(price, listConstraints);
+				inventoryPanel.add(category, listConstraints);
 
 				listConstraints.gridx = 3;
 				listConstraints.gridy = i + 2;
-				inventoryPanel.add(expiry, listConstraints);
+				inventoryPanel.add(price, listConstraints);
 
 				listConstraints.gridx = 4;
 				listConstraints.gridy = i + 2;
-				inventoryPanel.add(qty, listConstraints);
+				inventoryPanel.add(expiry, listConstraints);
 
 				listConstraints.gridx = 5;
 				listConstraints.gridy = i + 2;
+				inventoryPanel.add(qty, listConstraints);
+				
+				listConstraints.gridx = 6;
+				listConstraints.gridy = i + 2;
+				inventoryPanel.add(numConsumed, listConstraints);
+
+				listConstraints.gridx = 7;
+				listConstraints.gridy = i + 2;
 				inventoryPanel.add(expired, listConstraints);
 
-				listConstraints.gridx = 6;
+				listConstraints.gridx = 8;
 				listConstraints.gridy = i + 2;
 				inventoryPanel.add(editBtn, listConstraints);
 			}

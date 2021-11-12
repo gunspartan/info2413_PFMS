@@ -106,7 +106,7 @@ public class GroceryInventory {
 		ResultSet rs = null;
 		try {
 			conn = App.getConnection();
-			stmt = conn.prepareStatement("SELECT ROUND(SUM(GroceryItem.Price) * GroceryItem.Qty, 2) AS TotalSpent "
+			stmt = conn.prepareStatement("SELECT ROUND(SUM(GroceryItem.Price * GroceryItem.Qty), 2) AS TotalSpent "
 					+ "FROM GroceryItem INNER JOIN GroceryInventory "
 					+ "WHERE GroceryItem.GroceryInventoryId = GroceryInventory.GroceryInventoryId AND GroceryInventory.GroceryInventoryId = " + id + ";");
 			rs = stmt.executeQuery();

@@ -51,7 +51,7 @@ public class RegisterPanel extends JPanel {
 					User.createUser(newUsername, newPwd, newEmail);	
 					
 				} catch (Exception err) {
-					System.out.println(err);
+					err.printStackTrace();
 					
 				}
 				

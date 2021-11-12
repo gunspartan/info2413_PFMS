@@ -14,9 +14,12 @@ public class ContainerPanel extends JPanel {
 	private LoginPanel loginPanel;
 	private RegisterPanel registerPanel;
 	private HomePanel homePanel;
+	private EditBudgetPanel editBudgetPanel;
 	private InventoryPanel inventoryPanel;
 	private NewInventoryPanel newInventoryPanel;
+	private CategoriesPanel categoriesPanel;
 	private NewItemPanel newItemPanel;
+	private EditItemPanel editItemPanel;
 	private User currUser = null;
 
 	public ContainerPanel() throws Exception {
@@ -33,11 +36,18 @@ public class ContainerPanel extends JPanel {
 	// ---- Handle Changing Panels ----
 	// -- Login Page --
 	public void handleLoginPanelLoginBtn(ActionEvent e) {
-		homePanel = new HomePanel(this, cl, currUser);
-		add(homePanel, "3");
-		cl.show(this, "3");
-
+		// Make user set budget if there is no budget or at begininng of month
+		if (currUser.getBudget(currUser.getUserId()) == 0 || App.isFirstDay(App.getToday())) {
+			editBudgetPanel = new EditBudgetPanel(this, cl, currUser);
+			add(editBudgetPanel, "9");
+			cl.show(this, "9");
+		} else {
+			homePanel = new HomePanel(this, cl, currUser);
+			add(homePanel, "3");
+			cl.show(this, "3");
+		}
 	}
+	
 	// Show Register Panel
 	public void handleLoginPanelRegisterBtn (ActionEvent e) {
 		registerPanel = new RegisterPanel(this, cl);
@@ -49,13 +59,20 @@ public class ContainerPanel extends JPanel {
 	public void handleRegisterPanelBackBtn (ActionEvent e) {
 		cl.show(this, "1");
 	}
+	
+	// Edit Budget Page
+	public void handleEditBudgetPanelBackBtn(ActionEvent e) {
+		homePanel = new HomePanel(this, cl, currUser);
+		add(homePanel, "3");
+		cl.show(this, "3");
+	}
 
 	// -- Home Page --
 	public void handleHomePanelLogoutBtn(ActionEvent e) {
 		cl.show(this, "1");
 	}
 	
-	public void handleHomePanelInventoryBtn(ActionEvent e, int inventorySelectedId) throws IOException, URISyntaxException {
+	public void handleHomePanelInventoryBtn(ActionEvent e, int inventorySelectedId) {
 		// Check database for matching inventory
 		inventoryPanel = new InventoryPanel(this, cl, inventorySelectedId);
 		add(inventoryPanel, "4");
@@ -68,9 +85,28 @@ public class ContainerPanel extends JPanel {
 		cl.show(this, "5");
 	}
 	
+	public void handleHomePanelManageCategoriesBtn(ActionEvent e) {
+		categoriesPanel = new CategoriesPanel(this, cl);
+		add(categoriesPanel, "8");
+		cl.show(this, "8");
+	}
+	
+	public void handleHomePanelEditBudgetBtn(ActionEvent e) {
+		editBudgetPanel = new EditBudgetPanel(this, cl, currUser);
+		add(editBudgetPanel, "9");
+		cl.show(this, "9");
+	}
+	
 	// -- New Inventory Page --
 	public void handleNewInventoryPanelBackBtn(ActionEvent e) {
 		// Remake the home panel
+		homePanel = new HomePanel(this, cl, currUser);
+		add(homePanel, "3");
+		cl.show(this, "3");
+	}
+	
+	// -- Manage Categories Page --
+	public void handleCategoriesPanelBackBtn(ActionEvent e) {
 		homePanel = new HomePanel(this, cl, currUser);
 		add(homePanel, "3");
 		cl.show(this, "3");
@@ -89,6 +125,12 @@ public class ContainerPanel extends JPanel {
 		add(newItemPanel, "6");
 		cl.show(this, "6");
 	}
+	
+	public void handleInventoryPanelEditItemBtn(ActionEvent e, int inventoryId, int itemId) {
+		editItemPanel = new EditItemPanel(this, cl, inventoryId, itemId);
+		add(editItemPanel, "7");
+		cl.show(this, "7");
+	}
 
 
 	// -- New Item Page --
@@ -104,7 +146,7 @@ public class ContainerPanel extends JPanel {
 	public void setCurrUser(User usr) {
 		currUser = usr;
 	}
-
+	// Get current user
 	public User getCurrUser() {
 		return currUser;
 	}
