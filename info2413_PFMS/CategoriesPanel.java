@@ -40,7 +40,12 @@ public class CategoriesPanel extends JPanel {
 		
 		// New Category Button
 		JButton newCategoryBtn = new JButton("Create new category");
-		// Actionlistener
+		newCategoryBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parentPanel.handleCategoriesPanelNewCategoryBtn(e);
+			}
+		});
 		
 		// Back Button
 		JButton backBtn = new JButton("Back");
@@ -97,12 +102,17 @@ public class CategoriesPanel extends JPanel {
 		categories = Category.getCategories();
 		if (categories != null || !categories.isEmpty()) {
 			for (int i = 0; i < categories.size(); i ++) {
-				JLabel categoryId = new JLabel(categories.get(i)[0]);
+				int categoryId = Integer.parseInt(categories.get(i)[0]);
 				JLabel categoryName = new JLabel(categories.get(i)[1]);
 				String formatted = String.format("%.2f", Float.parseFloat(categories.get(i)[2]));
 				JLabel totalSpent = new JLabel (formatted);
 				JButton editBtn = new JButton("EDIT");
-				// Action Listener
+				editBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						parentPanel.handleCategoriesPanelEditBtn(e, categoryId);
+					}
+				});
 				
 				// Add Labels
 				listConstraints.gridx = 0;

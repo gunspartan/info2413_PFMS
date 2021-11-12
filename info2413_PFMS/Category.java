@@ -26,21 +26,7 @@ public class Category {
 	public String getCategoryName() {
 		return categoryName;
 	}
-	
-	// createCategory
-	// Add category to database
-	
-	// deleteCategory
-	// Delete category from database
-	
-	// updateCategory
-	// Make changes to database
-	
-	// calculateSpending
-	// Get prices from all items and add
-	
-	// addGroceryItems
-	// Add item to list
+
 	// ----- SQL Queries -----
 	public static ArrayList<String[]> getCategories() {
 		ArrayList<String[]> categories = new ArrayList<>();
@@ -67,6 +53,81 @@ public class Category {
 			App.closeQueitly(conn);
 		}
 		return null;
+	}
+	
+	public static String getCategoryById(int categoryId) {
+		String categoryName = "";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT CategoryName FROM Category WHERE CategoryId = " + categoryId + ";");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				categoryName = rs.getString("CategoryName");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		return categoryName;
+	}
+	
+	// Create category
+	public static void createCategory(String categoryName) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("INSERT INTO Category (CategoryName) VALUES ('" + categoryName + "');");
+			stmt.executeUpdate();
+			new PopupFrame(PopupType.CATEGORY_CREATE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new PopupFrame(PopupType.CATEGORY_CREATE_ERROR);
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+	}
+	
+	// Update category
+	public static void updateCategory(int categoryId, String categoryName) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("UPDATE Category SET CategoryName = '" + categoryName + "' WHERE CategoryId = " + categoryId + ";");
+			stmt.executeUpdate();
+			new PopupFrame(PopupType.CATEGORY_UPDATE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new PopupFrame(PopupType.CATEGORY_UPDATE_ERROR);
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+	}
+	// Delete category
+	public static void deleteCategory(int categoryId) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("DELETE FROM Category WHERE CategoryId = " + categoryId + ";");
+			stmt.executeUpdate();
+			new PopupFrame(PopupType.CATEGORY_DELETE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new PopupFrame(PopupType.CATEGORY_DELETE_ERROR);
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
 	}
 	
 	// Update spending

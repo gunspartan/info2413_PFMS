@@ -184,9 +184,10 @@ public class GroceryItem {
 						+ "SET Img = '" + img + "', FoodName = '" + name + "', Category = '" + category + "', Price = " + price + ", ExpiryDate = '" + expiry + "', Qty = " + qty + ", QtyConsumed = " + numConsumed
 						+ " WHERE GroceryItemId = " + itemId + ";");
 				stmt.executeUpdate();
-				// Success message
+				new PopupFrame(PopupType.ITEM_UPDATE_SUCCESS);
 			} catch (Exception e) {
 				e.printStackTrace();
+				new PopupFrame(PopupType.ITEM_UPDATE_ERROR);
 			} finally {
 				App.closeQueitly(stmt);
 				App.closeQueitly(conn);
@@ -202,9 +203,10 @@ public class GroceryItem {
 			stmt = conn.prepareStatement("INSERT INTO GroceryItem (GroceryInventoryId, Category, FoodName, Price, ExpiryDate, Qty, QtyConsumed, Img) "
 					+ "VALUES (" + inventoryId + ",'" + category + "','" + name + "'," + price + ",'" + expiry + "'," + qty  + "," + numConsumed + ",'" + img + "');");
 			stmt.executeUpdate();
-			System.out.println("Successfully created item");
+			new PopupFrame(PopupType.ITEM_CREATE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			new PopupFrame(PopupType.ITEM_CREATE_ERROR);
 		} finally {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
@@ -219,9 +221,10 @@ public class GroceryItem {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("DELETE FROM GroceryItem WHERE GroceryItemId = " + itemId + ";");
 			stmt.executeUpdate();
-			// Success message
+			new PopupFrame(PopupType.ITEM_DELETE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			new PopupFrame(PopupType.ITEM_DELETE_ERROR);
 		} finally {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);

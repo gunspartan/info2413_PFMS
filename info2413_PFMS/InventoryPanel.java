@@ -72,18 +72,15 @@ public class InventoryPanel extends JPanel {
 			}
 		});
 		
-
-		// Delete Inventory Button
-		JButton deleteInventoryBtn = new JButton("Delete Inventory");
-		deleteInventoryBtn.addActionListener(new ActionListener() {
+		// Edit Inventory Button
+		JButton editInventoryBtn = new JButton("Edit Inventory");
+		editInventoryBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GroceryInventory.deleteInventory(inventoryId);
-				// Return to home page after deletion
-				parentPanel.handleInventoryPanelHomeBtn(e);
+				parentPanel.handleInventoryPanelEditInventoryBtn(e, inventoryId);
 			}
-			
 		});
+
 		// Back to Home Button
 		JButton homeBtn = new JButton("Home");
 		homeBtn.addActionListener(new ActionListener() {
@@ -123,7 +120,7 @@ public class InventoryPanel extends JPanel {
 		// Add Button
 		gc.gridx = 2;
 		gc.gridy = 0;
-		add(deleteInventoryBtn, gc);
+		add(editInventoryBtn, gc);
 		gc.gridx = 3;
 		gc.gridy = 0;
 		add(homeBtn, gc);

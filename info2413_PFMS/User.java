@@ -104,8 +104,10 @@ public class User {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("UPDATE UserInfo SET Budget = " + budget + " WHERE UserId = " + userId + ";");
 			stmt.executeUpdate();
+			new PopupFrame(PopupType.SET_BUDGET_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			new PopupFrame(PopupType.SET_BUDGET_ERROR);
 		} finally {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);

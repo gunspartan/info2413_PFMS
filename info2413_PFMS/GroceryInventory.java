@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class GroceryInventory {
 	// -- SQL Queries -- 
-	// createGroceryInventory
+	// Create GroceryInventory
 	public static void createGroceryInventory(User user, String shopDate) {
 		int userId = user.getUserId();
 		
@@ -19,11 +19,10 @@ public class GroceryInventory {
 					"INSERT INTO GroceryInventory (UserId, ShopDate) "
 					+ "VALUES (" + userId + ", '" + shopDate + "');");
 			stmt.executeUpdate();
-			
-			System.out.println("Success");
+			new PopupFrame(PopupType.CATEGORY_CREATE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			// Error popup
+			new PopupFrame(PopupType.CATEGORY_CREATE_ERROR);
 		} finally {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
@@ -128,6 +127,24 @@ public class GroceryInventory {
 		
 	}
 	
+	// Update Inventory
+	public static void updateInventory(int id, String shopDate) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("UPDATE GroceryInventory SET ShopDate = '" + shopDate + "' WHERE GroceryInventoryId = " + id + ";");
+			stmt.executeUpdate();
+			new PopupFrame(PopupType.INVENTORY_UPDATE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new PopupFrame(PopupType.INVENTORY_UPDATE_ERROR);
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+	}
+	
 	// Delete Inventory
 	public static void deleteInventory(int id) {
 		Connection conn = null;
@@ -136,8 +153,10 @@ public class GroceryInventory {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("DELETE FROM GroceryInventory WHERE GroceryInventoryId = " + id + ";");
 			stmt.executeUpdate();
+			new PopupFrame(PopupType.INVENTORY_DELETE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			new PopupFrame(PopupType.INVENTORY_DELETE_ERROR);
 		} finally {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
