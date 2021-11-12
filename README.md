@@ -7,9 +7,8 @@
 - Fanny Quenneville
 
 ## TODO
-| User | Inventory | Item | Category | Notification | Report | Utilities |
-| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| Update User Budget| Create/Remove Inventory | Edit Food Items| Categories | Popup Notification | Generate Reports | Check Current Date |
-| | Calculate Spending | Check Expiry | Calculate Spending | | | |
-| | | Check Quantity | | | | |
-
+ - User set up food budget at the beginning of every month
+ - User must set budget when creating an account
+ - Search (Category, Food Name, Expiry Date)
+ - Pop up notifications (Qty < 3, Expiry < 10 Days, Spending > 80% of Budget, Expired Food)
+ - Generate Report
