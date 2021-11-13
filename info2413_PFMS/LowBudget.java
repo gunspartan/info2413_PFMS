@@ -1,6 +1,6 @@
 package info2413_PFMS;
 
-public class LowBudget extends Notification {
+public class LowBudget {
 	float totalBudget;
 	float totalSpent;
 	

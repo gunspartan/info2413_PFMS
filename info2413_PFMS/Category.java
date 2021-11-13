@@ -112,6 +112,7 @@ public class Category {
 			App.closeQueitly(conn);
 		}
 	}
+	
 	// Delete category
 	public static void deleteCategory(int categoryId) {
 		Connection conn = null;
@@ -144,11 +145,13 @@ public class Category {
 					+ "WHERE GroceryItem.Category = Category.CategoryName AND Category.CategoryName = '" + categoryName + "';");
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-				totalSpent = rs.getFloat("TotalSpent");
+					totalSpent = rs.getFloat("TotalSpent");
+					System.out.print(totalSpent);
 			}
 			
 			stmt1 = conn.prepareStatement("UPDATE Category "
 					+ "SET TotalSpent = " + totalSpent + "WHERE CategoryName = '" + categoryName + "';");
+			System.out.print(totalSpent);
 			stmt1.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,6 +159,49 @@ public class Category {
 			App.closeQueitly(rs);
 			App.closeQueitly(stmt);
 			App.closeQueitly(stmt1);
+			App.closeQueitly(conn);
+		}
+		
+	}
+	public static void updateTotalSpending() {
+		ArrayList<Integer> categoryIds = new ArrayList<>();
+		float totalSpent = 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		PreparedStatement stmt1 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT CategoryId FROM Category;");
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				categoryIds.add(rs.getInt("CategoryId"));
+			}
+			for (int i = 0; i < categoryIds.size(); i++) {
+				stmt1 = conn.prepareStatement("SELECT ROUND(SUM(GroceryItem.Price * GroceryItem.Qty), 2) AS TotalSpent "
+						+ "FROM GroceryItem INNER JOIN Category "
+						+ "WHERE GroceryItem.Category = Category.CategoryName AND Category.CategoryId = " + categoryIds.get(i) + ";");
+				rs = stmt1.executeQuery();
+				while(rs.next()) {
+						totalSpent = rs.getFloat("TotalSpent");
+						System.out.print(totalSpent);
+				}
+				
+				stmt2 = conn.prepareStatement("UPDATE Category "
+						+ "SET TotalSpent = " + totalSpent + "WHERE CategoryId = " + categoryIds.get(i) + ";");
+				System.out.print(totalSpent);
+				stmt2.executeUpdate();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(stmt1);
+			App.closeQueitly(stmt2);
 			App.closeQueitly(conn);
 		}
 		

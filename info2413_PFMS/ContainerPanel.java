@@ -49,6 +49,8 @@ public class ContainerPanel extends JPanel {
 			add(homePanel, "home");
 			cl.show(this, "home");
 		}
+		GroceryItem.checkQuantity();
+		GroceryItem.checkExpiryDate();
 	}
 	
 	// Show Register Panel
@@ -126,7 +128,7 @@ public class ContainerPanel extends JPanel {
 		cl.show(this, "newCategory");
 	}
 
-	// -- Edit/New Categoires Page --
+	// -- Edit/New Categories Page --
 	public void handleEditCategoriesPanelBackBtn(ActionEvent e) {
 		categoriesPanel = new CategoriesPanel(this, cl);
 		add(categoriesPanel, "categories");
@@ -135,7 +137,7 @@ public class ContainerPanel extends JPanel {
 	
 	// -- Inventory Page --
 	public void handleInventoryPanelHomeBtn (ActionEvent e) {
-		// Remake the home panel
+		// Recreate the home panel
 		homePanel = new HomePanel(this, cl, currUser);
 		add(homePanel, "home");
 		cl.show(this, "home");
@@ -161,7 +163,7 @@ public class ContainerPanel extends JPanel {
 
 	// -- Edit Inventory Page --
 	public void handleEditInventoryPanelBackBtn(ActionEvent e) {
-		// Remake the home panel
+		// Recreate the home panel
 		homePanel = new HomePanel(this, cl, currUser);
 		add(homePanel, "home");
 		cl.show(this, "home");

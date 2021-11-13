@@ -1,6 +1,6 @@
 package info2413_PFMS;
 
-public class LowCount extends Notification {
+public class LowCount {
 	// LowCount gets its information from GroceryInventory
 	GroceryInventory inventory;
 	

@@ -153,6 +153,9 @@ public class GroceryInventory {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("DELETE FROM GroceryInventory WHERE GroceryInventoryId = " + id + ";");
 			stmt.executeUpdate();
+			
+			Category.updateTotalSpending();
+			
 			new PopupFrame(PopupType.INVENTORY_DELETE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

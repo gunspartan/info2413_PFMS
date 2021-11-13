@@ -54,7 +54,7 @@ public class InventoryPanel extends JPanel {
 		JLabel titleLabel = new JLabel(inventoryName);
 		JLabel inventoryLabel = new JLabel("My Items");
 
-		// Items table
+		// Items Labels
 		JLabel imgLabel = new JLabel("Image");
 		JLabel nameLabel = new JLabel("Name");
 		JLabel categoryLabel = new JLabel("Category");
@@ -200,9 +200,8 @@ public class InventoryPanel extends JPanel {
 				JLabel category = new JLabel(groceryItems.get(i)[3]);
 				JLabel price = new JLabel(groceryItems.get(i)[4]);
 				JLabel expiry = new JLabel(groceryItems.get(i)[5]);
-//				JLabel qty = new JLabel(groceryItems.get(i)[6]);
 				int itemId = Integer.parseInt(groceryItems.get(i)[0]);
-				int remaining = GroceryItem.checkQuantity(itemId);
+				int remaining = GroceryItem.getRemaining(itemId);
 				JLabel qty = new JLabel(Integer.toString(remaining));
 				JLabel numConsumed = new JLabel(groceryItems.get(i)[7]);
 				JLabel expired = new JLabel(groceryItems.get(i)[8].equals("0") ? "No" : "Yes");

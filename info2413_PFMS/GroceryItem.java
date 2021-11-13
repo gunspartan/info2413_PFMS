@@ -6,101 +6,44 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class GroceryItem {
-	String name, purchaseDate, expiryDate, img;
-	int quantity, numConsumed;
-	float price;
-	Boolean isExpired;
-	
-	// GroceryItem belongs to a GroceryInventory
-	GroceryInventory inventory;
-	
-	// GroceryItem can have multiple categories categories
-	ArrayList<Category> categories = new ArrayList<Category>();
-	
-	// Constructor
-	GroceryItem(String name, int quantity, float price, String purchaseDate, String expiryDate, String img) {
-		this.name = name;
-		this.quantity = quantity;
-		this.price = price;
-		this.purchaseDate = purchaseDate;
-		this.expiryDate = expiryDate;
-		this.img = img;
-		// Items are not expired by default
-		isExpired = false;
-	}
-	
-	// Setters and getters
-	public void setName(String newName) {
-		name = newName;
-		// Make changes to database
-	}
-	
-	public void setQuantity(int newQuantity) {
-		quantity = newQuantity;
-		// Make changes to database
-	}
-	
-	public void setPrice(float newPrice) {
-		price = newPrice;
-		// Make changes to database
-	}
-	
-	public void setPurchaseDate(String newPurchaseDate) {
-		purchaseDate = newPurchaseDate;
-		// Make changes to database
-	}
-	
-	public void setExpiryDate(String newExpiryDate) {
-		expiryDate = newExpiryDate;
-		// Make changes to database
-	}
-	
-	public void setImg(String newImg) {
-		img = newImg;
-		// Make changes to database
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public int getQuantity() {
-		return quantity;
-	}
-	
-	public float getPrice() {
-		return price;
-	}
-	
-	// setExpired
-		// If today >= expiryDate -> expired = true
-	
-	public String getPurchaseDate() {
-		return purchaseDate;
-	}
-	
-	public String getExpiryDate() {
-		return expiryDate;
-	}
-	
-	public String getImg() {
-		return img;
-	}
-	
-	public Boolean getExpired() {
-		return isExpired;
+	// Get All Items
+	public static ArrayList<String[]> getAllItems() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT * FROM GroceryItem");
+			rs = stmt.executeQuery();
+
+			ArrayList<String[]> array = new ArrayList<>();
+			while (rs.next()) {
+				String[] groceryItem = new String[10];
+				groceryItem[0] = rs.getString("GroceryItemId");
+				groceryItem[1] = rs.getString("GroceryInventoryId");
+				groceryItem[2] = rs.getString("Img");
+				groceryItem[3] = rs.getString("FoodName");
+				groceryItem[4] = rs.getString("Category");
+				groceryItem[5] = rs.getString("Price");
+				groceryItem[6] = rs.getString("ExpiryDate");
+				groceryItem[7] = rs.getString("Qty");
+				groceryItem[8] = rs.getString("QtyConsumed");
+				groceryItem[9] = rs.getString("Expired");
+				array.add(groceryItem);
+			}
+			System.out.println("All records have been selected");
+			return array;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+
+		return null;
 	}
 
-	// createGroceryItem
-	
-	// deleteGroceryItem
-	
-	// updateGroceryItem
-	
-	// checkQuantity
-	// If quantity >= 3 -> send low count notification
-	
-	
 	// Get Items from database
 	public static ArrayList<String[]> getGroceryItems(int inventoryId) {
 		Connection conn = null;
@@ -112,7 +55,7 @@ public class GroceryItem {
 					+ "FROM GroceryItem INNER JOIN GroceryInventory "
 					+ "WHERE GroceryInventory.GroceryInventoryId = " + inventoryId + " AND GroceryInventory.GroceryInventoryId = GroceryItem.GroceryInventoryId;");
 			rs = stmt.executeQuery();
-			
+
 			ArrayList<String[]> array = new ArrayList<>();
 			while (rs.next()) {
 				String[] groceryItem = new String[9];
@@ -136,10 +79,10 @@ public class GroceryItem {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
 		}
-		
+
 		return null;
 	}
-	
+
 	// Get item by id
 	public static String[] getGroceryItemById(int itemId) {
 		Connection conn = null;
@@ -151,7 +94,7 @@ public class GroceryItem {
 			stmt = conn.prepareStatement("SELECT Img, FoodName, Category, Price, ExpiryDate, Qty, QtyConsumed "
 					+ "FROM GroceryItem WHERE GroceryItemId = " + itemId + ";");
 			rs = stmt.executeQuery();
-			
+
 			while (rs.next()) {
 				item[0] = rs.getString("Img");
 				item[1] = rs.getString("FoodName");
@@ -170,30 +113,52 @@ public class GroceryItem {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
 		}
-		
+
 		return null;
 	}
-	
+
 	// Update Item
-		public static void updateItem(int itemId, String img, String name, String category, float price, String expiry, int qty, int numConsumed) {
-			Connection conn = null;
-			PreparedStatement stmt = null;
-			try {
-				conn = App.getConnection();
-				stmt = conn.prepareStatement("UPDATE GroceryItem "
-						+ "SET Img = '" + img + "', FoodName = '" + name + "', Category = '" + category + "', Price = " + price + ", ExpiryDate = '" + expiry + "', Qty = " + qty + ", QtyConsumed = " + numConsumed
-						+ " WHERE GroceryItemId = " + itemId + ";");
-				stmt.executeUpdate();
-				new PopupFrame(PopupType.ITEM_UPDATE_SUCCESS);
-			} catch (Exception e) {
-				e.printStackTrace();
-				new PopupFrame(PopupType.ITEM_UPDATE_ERROR);
-			} finally {
-				App.closeQueitly(stmt);
-				App.closeQueitly(conn);
-			}
+	public static void updateItem(int itemId, String img, String name, String category, float price, String expiry, int qty, int numConsumed) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("UPDATE GroceryItem "
+					+ "SET Img = '" + img + "', FoodName = '" + name + "', Category = '" + category + "', Price = " + price + ", ExpiryDate = '" + expiry + "', Qty = " + qty + ", QtyConsumed = " + numConsumed
+					+ " WHERE GroceryItemId = " + itemId + ";");
+			stmt.executeUpdate();
+			new PopupFrame(PopupType.ITEM_UPDATE_SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new PopupFrame(PopupType.ITEM_UPDATE_ERROR);
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
 		}
-	
+		checkQuantity();
+		checkExpiryDate();
+	}
+
+	// Set expired
+	public static void setExpired(ArrayList<String[]> items) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = App.getConnection();
+			for (int i = 0; i < items.size(); i ++) {
+				stmt = conn.prepareStatement("UPDATE GroceryItem "
+						+ "SET Expired = true "
+						+ " WHERE GroceryItemId = " + items.get(i)[0] + ";");
+				stmt.executeUpdate();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+	}
+
 	// Create Item
 	public static void createItem(int inventoryId, String img, String name, String category, float price, String expiry, int qty, int numConsumed) {
 		Connection conn = null;
@@ -211,8 +176,10 @@ public class GroceryItem {
 			App.closeQueitly(stmt);
 			App.closeQueitly(conn);
 		}
+		checkQuantity();
+		checkExpiryDate();
 	}
-	
+
 	// Delete Item
 	public static void deleteItem(int itemId) {
 		Connection conn = null;
@@ -221,6 +188,7 @@ public class GroceryItem {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("DELETE FROM GroceryItem WHERE GroceryItemId = " + itemId + ";");
 			stmt.executeUpdate();
+			Category.updateTotalSpending();
 			new PopupFrame(PopupType.ITEM_DELETE_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -230,17 +198,49 @@ public class GroceryItem {
 			App.closeQueitly(conn);
 		}
 	}
-	
-	// Check quantity
-	public static int checkQuantity(int itemId) {
+
+	// Get Remaining Quantity
+	public static int getRemaining(int itemId) {
 		String[] item = getGroceryItemById(itemId);
-		int remaining = Integer.parseInt(item[5]) - Integer.parseInt(item[6]);
-		
-		if (remaining <= 3) {
-			// Popup
-		}
-		
-		return remaining;
+		return Integer.parseInt(item[5]) - Integer.parseInt(item[6]);		
 	}
-	
+
+	// Check Quantity
+	public static void checkQuantity() {
+		// Check all items
+		ArrayList<String[]> items = getAllItems();
+		ArrayList<String[]> lowQuantityItems = new ArrayList<>();
+		for (int i = 0; i < items.size(); i++) {
+			if (getRemaining(Integer.parseInt(items.get(i)[0])) < 3) {
+				lowQuantityItems.add(items.get(i));
+			}
+		}
+		if (!lowQuantityItems.isEmpty()) {
+			new Notification(NotificationType.LOW_QTY, lowQuantityItems);
+		}
+	}
+
+	// Check expiry date
+	public static void checkExpiryDate() {
+		// Check all items
+		ArrayList<String[]> items = getAllItems();
+		ArrayList<String[]> expiredItems = new ArrayList<>();
+		ArrayList<String[]> expiringItems = new ArrayList<>();
+		for (int i = 0; i < items.size(); i++) {
+			String expiryDate = items.get(i)[6];
+			if (App.daysDiff(expiryDate) < 0) {
+				expiredItems.add(items.get(i));
+			} else if (App.daysDiff(expiryDate) < 10) {
+				expiringItems.add(items.get(i));
+			}
+		}
+		if (!expiredItems.isEmpty()) {
+			new Notification(NotificationType.EXPIRED, expiredItems);
+			// Set expired
+			setExpired(expiredItems);
+		}
+		if (!expiringItems.isEmpty()) {
+			new Notification(NotificationType.EXPIRING, expiringItems);
+		}
+	}
 }

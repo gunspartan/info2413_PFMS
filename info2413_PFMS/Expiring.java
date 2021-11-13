@@ -1,6 +1,6 @@
 package info2413_PFMS;
 
-public class Expiring extends Notification {
+public class Expiring {
 	// Expring gets its information from GroceryInventory
 	GroceryInventory inventory;
 		

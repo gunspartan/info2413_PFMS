@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
@@ -36,7 +38,6 @@ public class App {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setVisible(true);
 					
-					System.out.println(today + isFirstDay(today));
 					// Test update spending function
 					GroceryInventory.updateTotalSpending(2);
 				} catch (Exception e) {
@@ -63,7 +64,6 @@ public class App {
 			Class.forName(driver);
 			
 			Connection conn = DriverManager.getConnection(url, username, password);
-			System.out.println("Database connected");
 			return conn;
 		} catch (Exception e ) {
 			System.out.println(e);
@@ -104,5 +104,20 @@ public class App {
 	
 	public static boolean isFirstDay(String date) {
 		return Pattern.matches("........01", date);
+	}
+	
+	public static long daysDiff(String expiryDate) {
+		Date expiry;
+		long diffDays = 0;
+		try {
+			expiry = df.parse(expiryDate);
+			Date dateToday = df.parse(today);
+			long diffMillis = expiry.getTime() - dateToday.getTime();
+			diffDays = TimeUnit.DAYS.convert(diffMillis, TimeUnit.MILLISECONDS);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return diffDays;
 	}
 }
