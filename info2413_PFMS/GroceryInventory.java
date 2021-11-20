@@ -96,6 +96,45 @@ public class GroceryInventory {
 		return null;
 	}
 	
+	// Search all inventories
+	public static ArrayList<String[]> searchInventories(String params, int userId) {
+		ArrayList<String[]> result = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT GroceryInventory.GroceryInventoryId, Img, FoodName, Category, Price, ExpiryDate, ShopDate, Qty, QtyConsumed, Expired, GroceryItemId "
+					+ "FROM GroceryItem INNER JOIN GroceryInventory "
+					+ "WHERE (FoodName LIKE '%" + params + "%' OR Category LIKE '%" + params + "%' OR ExpiryDate LIKE '%" + params + "%') "
+							+ "AND GroceryInventory.GroceryInventoryId = GroceryItem.GroceryInventoryId AND UserId = " + userId + ";");
+			rs = stmt.executeQuery();
+			String[] searchResult = new String[11];
+			while (rs.next()) {
+				searchResult[0] = rs.getString("GroceryInventoryId");
+				searchResult[1] = rs.getString("Img");
+				searchResult[2] = rs.getString("FoodName");
+				searchResult[3] = rs.getString("Category");
+				searchResult[4] = rs.getString("Price");
+				searchResult[5] = rs.getString("ExpiryDate");
+				searchResult[6] = rs.getString("ShopDate");
+				searchResult[7] = rs.getString("Qty");
+				searchResult[8] = rs.getString("QtyConsumed");
+				searchResult[9] = rs.getString("Expired");
+				searchResult[10] = rs.getString("GroceryItemId");
+				result.add(searchResult);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		return null;
+	}
+	
 	// Update Spending
 	public static void updateTotalSpending(int id) {
 		float totalSpent = 0;

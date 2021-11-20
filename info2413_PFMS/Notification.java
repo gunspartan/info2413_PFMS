@@ -32,10 +32,10 @@ public class Notification extends JFrame {
 		Dimension size = getPreferredSize();
 		size.width = 250;
 		content.setPreferredSize(size);
-		
+
 		sp = new JScrollPane();
 		innerPanel = new JPanel();
-		
+
 		// Labels
 		JLabel inventoryLabel = new JLabel("Inventory: ");
 		JLabel imgLabel = new JLabel("Image: ");
@@ -45,7 +45,7 @@ public class Notification extends JFrame {
 		JLabel expiryDateLabel = new JLabel("Expiry Date: ");
 		JLabel qtyRemainingLabel = new JLabel("# Remaining: ");
 		JLabel qtyConsumedLabel = new JLabel("# Consumed: ");
-		
+
 		switch (type) {
 		case EXPIRING:
 			title = "Expiring Items Warning";
@@ -62,24 +62,24 @@ public class Notification extends JFrame {
 		default:
 			break;
 		}
-		
+
 		// Frame
 		frame = new JFrame(title);
-		
+
 		// Layout
 		content.setLayout(new GridBagLayout());
 		innerPanel.setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints gc = new GridBagConstraints();
 		GridBagConstraints gcInner = new GridBagConstraints();
-		
+
 		gc.anchor = GridBagConstraints.CENTER;
 		gcInner.anchor = GridBagConstraints.CENTER;
 		gc.weightx = 0.25;
 		gc.weighty = 0.25;
 		gcInner.weightx = 0.25;
 		gcInner.weighty = 0.15;
-		
+
 		content.add(contentLabel, gc);
 		innerPanel.add(inventoryLabel, gcInner);
 		gcInner.gridx = 2;
@@ -96,7 +96,7 @@ public class Notification extends JFrame {
 		innerPanel.add(qtyRemainingLabel, gcInner);
 		gcInner.gridx = 8;
 		innerPanel.add(qtyConsumedLabel, gcInner);
-		
+
 		for (int i = 0; i < itemsArray.size(); i++) {
 			String inventoryName = GroceryInventory.getGroceryInventoryById(Integer.parseInt(itemsArray.get(i)[1]))[1];
 			JLabel inventory = new JLabel(inventoryName);
@@ -121,7 +121,7 @@ public class Notification extends JFrame {
 			int remaining = GroceryItem.getRemaining(itemId);
 			JLabel qtyRemaining = new JLabel(Integer.toString(remaining));
 			JLabel qtyConsumed = new JLabel(itemsArray.get(i)[8]);
-			
+
 			gcInner.gridy = i + 1;
 			gcInner.gridx = 0;
 			innerPanel.add(inventory, gcInner);
@@ -149,6 +149,40 @@ public class Notification extends JFrame {
 		content.add(sp, gc);
 		frame.add(content);
 		frame.setSize(800, 600);
+		frame.setVisible(true);
+	}
+
+	public Notification(NotificationType type, float userBudget, float totalSpent) {
+		// Set size
+		Dimension size = getPreferredSize();
+		size.width = 250;
+		content.setPreferredSize(size);
+
+		switch (type) {
+		case LOW_BUDGET:
+			title = "Low Budget Warning";
+			String warningMessage = String.format("LOW BUDGET WARNING: $%.2f out of $%.2f remaining.", userBudget - totalSpent, userBudget);
+			contentLabel = new JLabel(warningMessage);
+			break;
+		default:
+			break;
+		}
+
+		// Frame
+		frame = new JFrame(title);
+
+		// Layout
+		content.setLayout(new GridBagLayout());
+
+		GridBagConstraints gc = new GridBagConstraints();
+
+		gc.anchor = GridBagConstraints.CENTER;
+		gc.weightx = 0.25;
+		gc.weighty = 0.25;
+
+		content.add(contentLabel, gc);
+		frame.add(content);
+		frame.setSize(500, 300);
 		frame.setVisible(true);
 	}
 }

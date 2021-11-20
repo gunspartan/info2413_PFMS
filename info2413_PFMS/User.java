@@ -114,6 +114,38 @@ public class User {
 		}
 	}
 	
+	// Check Budget
+	public static float checkAllSpent(int userId) {
+		float allSpent = 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT ROUND(SUM(TotalSpent), 2) AS TotalSpent "
+					+ "FROM GroceryInventory WHERE UserId = " + userId + ";");
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				allSpent = rs.getFloat("TotalSpent");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		return allSpent;
+	}
+	
+	public static void checkBudget(float userBudget, float totalSpent) {
+		float warningBudget = (float) (userBudget * 0.8);
+		if (totalSpent >= warningBudget) {
+			new Notification(NotificationType.LOW_BUDGET, userBudget, totalSpent);
+		}
+		
+	}
+	
 	// Manage inventories
 	public void addGroceryInventory(GroceryInventory newInventory) {
 		inventory.add(newInventory);

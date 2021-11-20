@@ -1,11 +1,14 @@
 package info2413_PFMS;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -16,11 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-
-// TODO User settings
-// TODO Generate Reports
-// TODO Show total spent
+import javax.swing.JTextField;
 
 public class HomePanel extends JPanel {
 	private final ContainerPanel parentPanel;
@@ -36,6 +35,10 @@ public class HomePanel extends JPanel {
 		groceryInventories = GroceryInventory.getGroceryInventories(currUser);
 		this.parentPanel = parentPanel;
 		this.cl = cl;
+		// Check User budget
+		float currBudget = currUser.getBudget(currUser.getUserId());
+		float totalSpentAllInventories = User.checkAllSpent(currUser.getUserId());
+		User.checkBudget(currBudget, totalSpentAllInventories);
 		
 		// Set size	
 		Dimension size = getPreferredSize();
@@ -48,11 +51,42 @@ public class HomePanel extends JPanel {
 		inventoryPanel = new JPanel();
 				
 		// Labels
-		float currBudget = currUser.getBudget(currUser.getUserId());
 		JLabel titleLabel = new JLabel("Home");
 		JLabel inventoryLabel = new JLabel("Budget: " + String.format("%.2f", currBudget));
 		JLabel shoppingDateLabel = new JLabel("Shopping Date:");
 		JLabel totalSpentLabel = new JLabel("Total Spent: ");
+		
+		// Search
+		JTextField searchField = new JTextField(10);
+		searchField.setText("Search by name, category, or expiry date");
+		searchField.setForeground(Color.GRAY);
+		searchField.addFocusListener(new FocusListener() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (searchField.getText().equals("Search by name, category, or expiry date")) {
+					searchField.setText("");
+					searchField.setForeground(Color.BLACK);
+				}
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (searchField.getText().isEmpty()) {
+					searchField.setForeground(Color.GRAY);
+					searchField.setText("Search by name, category, or expiry date");
+				}
+			}
+		});
+		
+		JButton searchBtn = new JButton("Search");
+		searchBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// search results panel
+				String searchParam = searchField.getText(); 
+				parentPanel.handleHomePanelSearchBtn(e, searchParam);
+			}
+		});
 		
 		// Set budget Button
 		JButton editBudgetBtn = new JButton("Edit Budget");
@@ -148,7 +182,18 @@ public class HomePanel extends JPanel {
 		gc.gridx = 5;
 		gc.gridy = 0;
 		add(logoutBtn, gc);
+		
+		// Search
+		gc.gridx = 5;
+		gc.gridy = 1;
+		add(searchBtn, gc);
 	
+		gc.weightx = 1;
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.gridx = 4;
+		gc.gridy = 1;
+		add(searchField, gc);
+		
 		listConstraints.gridx = 0;
 		listConstraints.gridy = 0;
 		inventoryPanel.add(shoppingDateLabel, listConstraints);
@@ -210,7 +255,7 @@ public class HomePanel extends JPanel {
 		gc.ipadx = 750;
 		gc.gridwidth = 6;
 		gc.gridx = 0;
-		gc.gridy = 1;
+		gc.gridy = 2;
 		add(inventoryScrollPane, gc);
 	
 	}

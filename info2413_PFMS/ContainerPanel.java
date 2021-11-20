@@ -14,6 +14,7 @@ public class ContainerPanel extends JPanel {
 	private LoginPanel loginPanel;
 	private RegisterPanel registerPanel;
 	private HomePanel homePanel;
+	private SearchResultsPanel searchResultsPanel; 
 	private EditBudgetPanel editBudgetPanel;
 	private InventoryPanel inventoryPanel;
 	private EditInventoryPanel editInventoryPanel;
@@ -37,6 +38,7 @@ public class ContainerPanel extends JPanel {
 
 
 	// ---- Handle Changing Panels ----
+	
 	// -- Login Page --
 	public void handleLoginPanelLoginBtn(ActionEvent e) {
 		// Make user set budget if there is no budget or at begininng of month
@@ -53,7 +55,6 @@ public class ContainerPanel extends JPanel {
 		GroceryItem.checkExpiryDate();
 	}
 	
-	// Show Register Panel
 	public void handleLoginPanelRegisterBtn (ActionEvent e) {
 		registerPanel = new RegisterPanel(this, cl);
 		add(registerPanel, "register");
@@ -65,7 +66,7 @@ public class ContainerPanel extends JPanel {
 		cl.show(this, "login");
 	}
 	
-	// Edit Budget Page
+	// -- Edit Budget Page --
 	public void handleEditBudgetPanelBackBtn(ActionEvent e) {
 		homePanel = new HomePanel(this, cl, currUser);
 		add(homePanel, "home");
@@ -75,6 +76,12 @@ public class ContainerPanel extends JPanel {
 	// -- Home Page --
 	public void handleHomePanelLogoutBtn(ActionEvent e) {
 		cl.show(this, "login");
+	}
+	
+	public void handleHomePanelSearchBtn(ActionEvent e, String params) {
+		searchResultsPanel = new SearchResultsPanel(this, cl, params);
+		add(searchResultsPanel, "searchResults");
+		cl.show(this, "searchResults");
 	}
 	
 	public void handleHomePanelInventoryBtn(ActionEvent e, int inventorySelectedId) {
