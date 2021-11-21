@@ -192,7 +192,7 @@ public class InventoryPanel extends JPanel {
 					Image newImg = image.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
 					img = new JLabel(new ImageIcon(newImg));
 				} catch (Exception e) {
-					System.out.print(e);
+					e.printStackTrace();
 					img = new JLabel("Img not found");
 				}
 

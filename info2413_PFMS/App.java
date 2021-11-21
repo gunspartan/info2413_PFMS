@@ -13,18 +13,10 @@ import java.util.regex.Pattern;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-
-// Application GUI
-
-// TODO Move GUI Components to Individual Classes
 public class App {
 	private final static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	private final static Date dateToday = new Date();
 	private final static String today = df.format(dateToday);
-	
-	// Test for 1st day of month
-//	private final static Date dateTest1 = new Date(2021, 11, 01);
-//	private final static String dateTest = df.format(dateTest1);
 
 	// Main
 	public static void main(String s[]) {
@@ -37,11 +29,7 @@ public class App {
 					frame.setSize(800, 600);
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setVisible(true);
-					
-					// Test update spending function
-					GroceryInventory.updateTotalSpending(2);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -55,10 +43,6 @@ public class App {
 		try {
 			String driver = "com.mysql.cj.jdbc.Driver";
 			String url = "jdbc:mysql://localhost:3306/info2413";
-			// ------ CREATE A USER IN YOUR LOCAL DATABASE WITH THESE COMMANDS -------
-			// CREATE USER 'info2413'@'localhost' identified by 'PFMS_ADMIN';
-			// GRANT ALL PRIVILEGES ON info2413.* TO 'info2413'@'localhost';
-			// FLUSH PRIVILEGES;
 			String username = "info2413";
 			String password = "PFMS_ADMIN";
 			Class.forName(driver);
@@ -115,7 +99,6 @@ public class App {
 			long diffMillis = expiry.getTime() - dateToday.getTime();
 			diffDays = TimeUnit.DAYS.convert(diffMillis, TimeUnit.MILLISECONDS);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return diffDays;

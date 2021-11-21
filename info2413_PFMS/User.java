@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 
 public class User {
 	int userId;
@@ -76,23 +79,35 @@ public class User {
 	// Create User
 	// Add user to database
 	public static void createUser(String username, String userPwd, String email) throws Exception {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			conn = App.getConnection();
-			stmt = conn.prepareStatement(
-					"INSERT INTO UserInfo (Username, UserPwd, Email)" +
-					"VALUES ('" + username + "','" + userPwd + "','" + email + "');");
-			stmt.executeUpdate();
-			
-			new PopupFrame(PopupType.CREATE_USER_SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			new PopupFrame(PopupType.CREATE_USER_ERROR);
-		} finally {
-			App.closeQueitly(stmt);
-			App.closeQueitly(conn);
+		// Check if password is valid
+		Pattern pwdPattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$");
+		Matcher pwdMatch = pwdPattern.matcher(userPwd);
+		Pattern emailPattern = Pattern.compile(".+\\@.+\\..+");
+		Matcher emailMatch = emailPattern.matcher(email);
+		if (!pwdMatch.find()) {
+			new PopupFrame(PopupType.INVALID_PASSWORD);
+		} else if (!emailMatch.find()) {
+			new PopupFrame(PopupType.INVALID_EMAIL);
+		} else {
+			Connection conn = null;
+			PreparedStatement stmt = null;
+			try {
+				conn = App.getConnection();
+				stmt = conn.prepareStatement(
+						"INSERT INTO UserInfo (Username, UserPwd, Email)" +
+						"VALUES ('" + username + "','" + userPwd + "','" + email + "');");
+				stmt.executeUpdate();
+				
+				new PopupFrame(PopupType.CREATE_USER_SUCCESS);
+			} catch (Exception e) {
+				e.printStackTrace();
+				new PopupFrame(PopupType.CREATE_USER_ERROR);
+			} finally {
+				App.closeQueitly(stmt);
+				App.closeQueitly(conn);
+			}
 		}
+		
 	}
 	
 	// Set Budget
@@ -124,6 +139,29 @@ public class User {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("SELECT ROUND(SUM(TotalSpent), 2) AS TotalSpent "
 					+ "FROM GroceryInventory WHERE UserId = " + userId + ";");
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				allSpent = rs.getFloat("TotalSpent");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			App.closeQueitly(rs);
+			App.closeQueitly(stmt);
+			App.closeQueitly(conn);
+		}
+		return allSpent;
+	}
+	
+	public static float checkAllSpentMonth(int userId, String today) {
+		float allSpent = 0;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = App.getConnection();
+			stmt = conn.prepareStatement("SELECT ROUND(SUM(TotalSpent), 2) AS TotalSpent "
+					+ "FROM GroceryInventory WHERE UserId = " + userId + " AND ShopDate >= '" + today + "' - INTERVAL 30 DAY;");
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				allSpent = rs.getFloat("TotalSpent");

@@ -8,21 +8,21 @@ import java.util.ArrayList;
 public class Category {
 	String categoryName;
 	float totalSpent;
-	
+
 	// Category has a list of GroceryItems that belong to the category
 	ArrayList<GroceryItem> items = new ArrayList<GroceryItem>();
-	
+
 	// Constructor
 	Category(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	
+
 	// Getters and setters
 	public void setCategoryName(String newCategoryName) {
 		categoryName = newCategoryName;
 		// Make changes to database
 	}
-	
+
 	public String getCategoryName() {
 		return categoryName;
 	}
@@ -54,7 +54,7 @@ public class Category {
 		}
 		return null;
 	}
-	
+
 	public static String getCategoryById(int categoryId) {
 		String categoryName = "";
 		Connection conn = null;
@@ -76,7 +76,7 @@ public class Category {
 		}
 		return categoryName;
 	}
-	
+
 	// Create category
 	public static void createCategory(String categoryName) {
 		Connection conn = null;
@@ -94,7 +94,7 @@ public class Category {
 			App.closeQueitly(conn);
 		}
 	}
-	
+
 	// Update category
 	public static void updateCategory(int categoryId, String categoryName) {
 		Connection conn = null;
@@ -112,7 +112,7 @@ public class Category {
 			App.closeQueitly(conn);
 		}
 	}
-	
+
 	// Delete category
 	public static void deleteCategory(int categoryId) {
 		Connection conn = null;
@@ -130,7 +130,7 @@ public class Category {
 			App.closeQueitly(conn);
 		}
 	}
-	
+
 	// Update spending
 	public static void updateTotalSpending(String categoryName) {
 		float totalSpent = 0;
@@ -145,10 +145,10 @@ public class Category {
 					+ "WHERE GroceryItem.Category = Category.CategoryName AND Category.CategoryName = '" + categoryName + "';");
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-					totalSpent = rs.getFloat("TotalSpent");
-					System.out.print(totalSpent);
+				totalSpent = rs.getFloat("TotalSpent");
+				System.out.print(totalSpent);
 			}
-			
+
 			stmt1 = conn.prepareStatement("UPDATE Category "
 					+ "SET TotalSpent = " + totalSpent + "WHERE CategoryName = '" + categoryName + "';");
 			System.out.print(totalSpent);
@@ -163,6 +163,7 @@ public class Category {
 		}
 		
 	}
+
 	public static void updateTotalSpending() {
 		ArrayList<Integer> categoryIds = new ArrayList<>();
 		float totalSpent = 0;
@@ -171,7 +172,7 @@ public class Category {
 		PreparedStatement stmt1 = null;
 		PreparedStatement stmt2 = null;
 		ResultSet rs = null;
-		
+
 		try {
 			conn = App.getConnection();
 			stmt = conn.prepareStatement("SELECT CategoryId FROM Category;");
@@ -185,16 +186,16 @@ public class Category {
 						+ "WHERE GroceryItem.Category = Category.CategoryName AND Category.CategoryId = " + categoryIds.get(i) + ";");
 				rs = stmt1.executeQuery();
 				while(rs.next()) {
-						totalSpent = rs.getFloat("TotalSpent");
-						System.out.print(totalSpent);
+					totalSpent = rs.getFloat("TotalSpent");
+					System.out.print(totalSpent);
 				}
-				
+
 				stmt2 = conn.prepareStatement("UPDATE Category "
 						+ "SET TotalSpent = " + totalSpent + "WHERE CategoryId = " + categoryIds.get(i) + ";");
 				System.out.print(totalSpent);
 				stmt2.executeUpdate();
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -204,6 +205,6 @@ public class Category {
 			App.closeQueitly(stmt2);
 			App.closeQueitly(conn);
 		}
-		
+
 	}
 }

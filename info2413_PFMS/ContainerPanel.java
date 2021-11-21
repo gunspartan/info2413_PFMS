@@ -15,6 +15,7 @@ public class ContainerPanel extends JPanel {
 	private RegisterPanel registerPanel;
 	private HomePanel homePanel;
 	private SearchResultsPanel searchResultsPanel; 
+	private ReportPanel reportPanel;
 	private EditBudgetPanel editBudgetPanel;
 	private InventoryPanel inventoryPanel;
 	private EditInventoryPanel editInventoryPanel;
@@ -82,6 +83,12 @@ public class ContainerPanel extends JPanel {
 		searchResultsPanel = new SearchResultsPanel(this, cl, params);
 		add(searchResultsPanel, "searchResults");
 		cl.show(this, "searchResults");
+	}
+	
+	public void handleHomePanelCreateReportBtn(ActionEvent e, User user) {
+		reportPanel = new ReportPanel(this, cl, user);
+		add(reportPanel, "report");
+		cl.show(this, "report");
 	}
 	
 	public void handleHomePanelInventoryBtn(ActionEvent e, int inventorySelectedId) {

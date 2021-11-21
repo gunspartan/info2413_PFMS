@@ -102,7 +102,7 @@ public class HomePanel extends JPanel {
 		createReportBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+				parentPanel.handleHomePanelCreateReportBtn(e, currUser);
 			}
 		});
 		
