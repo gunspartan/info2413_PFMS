@@ -15,14 +15,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class LoginPanel extends JPanel {
-	private static final long serialVersionUID = 6054267968959897295L;
-	private final ContainerPanel parentPanel;
-	private final CardLayout cl;
-
 	public LoginPanel(ContainerPanel parentPanel, CardLayout cl) {
-		this.parentPanel = parentPanel;
-		this.cl = cl;
-
 		// Set size
 		Dimension size = getPreferredSize();
 		size.width = 250;

@@ -32,6 +32,8 @@ public class ContainerPanel extends JPanel {
 
 		// Set Layout
 		setLayout(cl);
+		
+		// Initial Panel
 		add(loginPanel, "login");
 		cl.show(this, "login");
 	}
@@ -92,7 +94,6 @@ public class ContainerPanel extends JPanel {
 	}
 	
 	public void handleHomePanelInventoryBtn(ActionEvent e, int inventorySelectedId) {
-		// Check database for matching inventory
 		inventoryPanel = new InventoryPanel(this, cl, inventorySelectedId);
 		add(inventoryPanel, "inventory");
 		cl.show(this, "inventory");
@@ -118,7 +119,6 @@ public class ContainerPanel extends JPanel {
 	
 	// -- New Inventory Page --
 	public void handleNewInventoryPanelBackBtn(ActionEvent e) {
-		// Remake the home panel
 		homePanel = new HomePanel(this, cl, currUser);
 		add(homePanel, "home");
 		cl.show(this, "home");
@@ -185,7 +185,6 @@ public class ContainerPanel extends JPanel {
 	
 	// -- New Item Page --
 	public void handleNewItemPanelBackBtn(ActionEvent e, int inventoryId) {
-		// Check database for matching inventory
 		inventoryPanel = new InventoryPanel(this, cl, inventoryId);
 		add(inventoryPanel, "inventory");
 		cl.show(this, "inventory");

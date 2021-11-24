@@ -13,16 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class NewInventoryPanel extends JPanel {
-	private final ContainerPanel parentPanel;
-	private final CardLayout cl;
-	private User user;
 	private int userId;
 	
 	public NewInventoryPanel(ContainerPanel parentPanel, CardLayout cl, User usr) {
-		this.parentPanel = parentPanel;
-		this.cl = cl;
-		this.user = usr;
-		userId = user.getUserId();
+		userId = usr.getUserId();
 		// Set size
 		Dimension size = getPreferredSize();
 		size.width = 250;
@@ -53,7 +47,7 @@ public class NewInventoryPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String shopDate = shopDateField.getText();
-				GroceryInventory.createGroceryInventory(user, shopDate);
+				GroceryInventory.createGroceryInventory(usr, shopDate);
 				
 			}
 			

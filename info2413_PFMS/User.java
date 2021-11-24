@@ -19,11 +19,8 @@ public class User {
 	String email;
 	float budget;
 	
-	// User can have multiple grocery inventories
-	LinkedList<GroceryInventory> inventory = new LinkedList<GroceryInventory>();
-	
 	// Constructor
-	User(String userId, String username, String password, String email, String budget) throws Exception {
+	User(String userId, String username, String password, String email, String budget) {
 		this.userId = Integer.parseInt(userId);
 		this.username = username;
 		this.password = password;
@@ -31,51 +28,10 @@ public class User {
 		this.budget = Float.parseFloat(budget);
 	}
 	
-	// Setters and getters
-	
-	// Maybe don't need setters
-	public void setUsername(String newUsername){
-		username = newUsername;
-		// Make change in databaase
-	}
-	
-	public void setPassword(String newPwd) {
-		password = newPwd;
-		// Make change in database
-	}
-	
-	public void setEmail(String newEmail) {
-		email = newEmail;
-		// Make change in database
-	}
-	
-	public void setBudget(float newBudget) {
-		budget = newBudget;
-		// Make change in database
-	}
-	
 	public int getUserId() {
 		return userId;
 	}
-	
-	public String getUsername() {
-		return username;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	
-	
-	public LinkedList<GroceryInventory> getInventory() {
-		return inventory;
-	}
-	
+
 	// Create User
 	// Add user to database
 	public static void createUser(String username, String userPwd, String email) throws Exception {
@@ -153,6 +109,7 @@ public class User {
 		return allSpent;
 	}
 	
+	// Check amount spent in last 30 days
 	public static float checkAllSpentMonth(int userId, String today) {
 		float allSpent = 0;
 		Connection conn = null;
@@ -176,21 +133,13 @@ public class User {
 		return allSpent;
 	}
 	
+	// Notify user of low budget 
 	public static void checkBudget(float userBudget, float totalSpent) {
 		float warningBudget = (float) (userBudget * 0.8);
 		if (totalSpent >= warningBudget) {
 			new Notification(NotificationType.LOW_BUDGET, userBudget, totalSpent);
 		}
 		
-	}
-	
-	// Manage inventories
-	public void addGroceryInventory(GroceryInventory newInventory) {
-		inventory.add(newInventory);
-	}
-	
-	public void deleteGroceryInventory(GroceryInventory newInventory) {
-		inventory.remove(newInventory);
 	}
 	
 	// Get user info from database

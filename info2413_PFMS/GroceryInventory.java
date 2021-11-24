@@ -30,7 +30,7 @@ public class GroceryInventory {
 	}
 
 
-	// Get Inventories
+	// Get All Inventories
 	public static ArrayList<String[]> getGroceryInventories(User currUser) {
 		if (currUser == null) {
 			return null;

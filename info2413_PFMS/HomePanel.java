@@ -22,19 +22,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class HomePanel extends JPanel {
-	private final ContainerPanel parentPanel;
-	private final CardLayout cl;
 	private final JScrollPane inventoryScrollPane;
 	private final JPanel inventoryPanel;
 	private ArrayList<String[]> groceryInventories;
-	private User currUser;
 	
 	public HomePanel(ContainerPanel parentPanel, CardLayout cl, User currUser) {
-		this.currUser = currUser;
 		// Get inventories from database
 		groceryInventories = GroceryInventory.getGroceryInventories(currUser);
-		this.parentPanel = parentPanel;
-		this.cl = cl;
 		// Check User budget
 		float currBudget = currUser.getBudget(currUser.getUserId());
 		float totalSpentAllInventories = User.checkAllSpent(currUser.getUserId());

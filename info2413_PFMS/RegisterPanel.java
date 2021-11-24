@@ -14,14 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class RegisterPanel extends JPanel {
-	private final ContainerPanel parentPanel;
-	private final CardLayout cl;
-	
+public class RegisterPanel extends JPanel {	
 	public RegisterPanel(ContainerPanel parentPanel, CardLayout cl) {
-		this.parentPanel = parentPanel;
-		this.cl = cl;
-		
 		// Set size	
 		Dimension size = getPreferredSize();
 		size.width = 250;

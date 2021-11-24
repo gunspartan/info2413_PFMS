@@ -24,9 +24,6 @@ import javax.swing.JScrollPane;
 
 // TODO sorting
 public class InventoryPanel extends JPanel {
-	private final ContainerPanel parentPanel;
-	private final CardLayout cl;
-	private final int inventoryId;
 	private final JScrollPane inventoryScrollPane;
 	private final JPanel inventoryPanel;
 	private ArrayList<String[]> groceryItems;
@@ -34,9 +31,6 @@ public class InventoryPanel extends JPanel {
 	public InventoryPanel(ContainerPanel parentPanel, CardLayout cl, int inventoryId) {
 		// Get items from database
 		groceryItems = GroceryItem.getGroceryItems(inventoryId);
-		this.parentPanel = parentPanel;
-		this.cl = cl;
-		this.inventoryId = inventoryId;
 		// Name of the inventory
 		String inventoryName = GroceryInventory.getGroceryInventoryById(inventoryId)[1];
 

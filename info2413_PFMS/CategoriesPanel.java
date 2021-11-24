@@ -15,15 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class CategoriesPanel extends JPanel {
-	private ContainerPanel parentPanel;
-	private CardLayout cl;
 	private final JScrollPane scrollPane;
 	private final JPanel innerPanel;
 	private ArrayList<String[]> categories;
 	public CategoriesPanel(ContainerPanel parentPanel, CardLayout cl) {
-		this.parentPanel = parentPanel;
-		this.cl = cl;
-		
 		// Set size
 		Dimension size = getPreferredSize();
 		size.width = 250;

@@ -6,28 +6,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class Category {
-	String categoryName;
-	float totalSpent;
-
-	// Category has a list of GroceryItems that belong to the category
-	ArrayList<GroceryItem> items = new ArrayList<GroceryItem>();
-
-	// Constructor
-	Category(String categoryName) {
-		this.categoryName = categoryName;
-	}
-
-	// Getters and setters
-	public void setCategoryName(String newCategoryName) {
-		categoryName = newCategoryName;
-		// Make changes to database
-	}
-
-	public String getCategoryName() {
-		return categoryName;
-	}
-
 	// ----- SQL Queries -----
+	// Get all categories
 	public static ArrayList<String[]> getCategories() {
 		ArrayList<String[]> categories = new ArrayList<>();
 		Connection conn = null;
@@ -55,6 +35,7 @@ public class Category {
 		return null;
 	}
 
+	// Get Category by ID
 	public static String getCategoryById(int categoryId) {
 		String categoryName = "";
 		Connection conn = null;
@@ -164,6 +145,7 @@ public class Category {
 		
 	}
 
+	// Updates spending for all categories
 	public static void updateTotalSpending() {
 		ArrayList<Integer> categoryIds = new ArrayList<>();
 		float totalSpent = 0;

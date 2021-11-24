@@ -14,7 +14,6 @@ import javax.swing.JTextField;
 
 public class EditCategoriesPanel extends JPanel {
 	public EditCategoriesPanel(ContainerPanel parentPanel, CardLayout cl, int categoryId) {
-		
 		// Set size
 		Dimension size = getPreferredSize();
 		size.width = 250;

@@ -14,16 +14,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class NewItemPanel extends JPanel {
-	private final ContainerPanel parentPanel;
-	private final CardLayout cl;
-	private int inventoryId;
 	private String fileName;
 	
 	public NewItemPanel(ContainerPanel parentPanel, CardLayout cl, int inventoryId) {
-		this.parentPanel = parentPanel;
-		this.cl = cl;
-		this.inventoryId = inventoryId;
-		
 		// Set size 
 		Dimension size = getPreferredSize();
 		size.width = 250;

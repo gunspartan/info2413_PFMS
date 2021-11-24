@@ -50,7 +50,7 @@ public class App {
 			Connection conn = DriverManager.getConnection(url, username, password);
 			return conn;
 		} catch (Exception e ) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		
 		return null;
@@ -61,7 +61,10 @@ public class App {
 		if (conn != null) {
 			try {
 				conn.close();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 		
 	}
@@ -69,7 +72,9 @@ public class App {
 		if (rs != null) {
 			try {
 				rs.close();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -77,19 +82,24 @@ public class App {
 		if (stmnt != null) {
 			try {
 				stmnt.close();
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
 	
+	// Current Date
 	public static String getToday() {
 		return today;
 	}
 	
+	// Check for 1st day of the month
 	public static boolean isFirstDay(String date) {
 		return Pattern.matches("........01", date);
 	}
 	
+	// Returns day difference
 	public static long daysDiff(String expiryDate) {
 		Date expiry;
 		long diffDays = 0;
