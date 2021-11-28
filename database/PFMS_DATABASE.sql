@@ -1,3 +1,5 @@
+CREATE DATABASE info2413;
+
 CREATE TABLE UserInfo (
   UserId int NOT NULL AUTO_INCREMENT UNIQUE,
   Username varchar(20) NOT NULL UNIQUE,
@@ -38,3 +40,5 @@ CREATE TABLE GroceryItem (
   FOREIGN KEY (GroceryInventoryId) REFERENCES GroceryInventory(GroceryInventoryId) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (Category) REFERENCES Category(CategoryName) ON UPDATE CASCADE ON DELETE RESTRICT
 );
+
+USE info2413;
